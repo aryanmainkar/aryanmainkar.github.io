@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aryan Mainkar — UI/UX Developer</title>
+<meta name="description" content="UI/UX Developer & Front-End Engineer. Designing and building user-centered, responsive interfaces with Figma, WordPress, Bootstrap, and AI-driven design tools.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #efe7d7;
+    --paper-warm: #e8dec9;
+    --paper-deep: #ddd1b8;
+    --ink: #1a1512;
+    --ink-soft: #5a4d42;
+    --ink-mute: #8a7d70;
+    --accent: #b8431f;
+    --accent-soft: #d4663d;
+    --rule: #c4b89e;
+    --green: #5a7a3d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 14px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ─────────────── NAV ─────────────── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, var(--paper) 60%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .nav-logo em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-soft);
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .nav-links a {
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+    padding: 4px 0;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .nav-links a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  .nav-counter {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+  }
+
+  /* ─────────────── HERO ─────────────── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 0 80px;
+    position: relative;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    margin-bottom: 56px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+  }
+  .status-pill::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(90, 122, 61, 0.7);
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(90, 122, 61, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(90, 122, 61, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(90, 122, 61, 0); }
+  }
+
+  h1.hero-name {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(64px, 14vw, 220px);
+    line-height: 0.88;
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    margin-bottom: 32px;
+  }
+  h1.hero-name .italic {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent);
+  }
+  h1.hero-name .amp {
+    display: inline-block;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-mute);
+    transform: translateY(0.05em);
+  }
+
+  .hero-tagline {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 64px;
+    margin-top: 48px;
+    align-items: end;
+  }
+  .hero-role {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(22px, 2.6vw, 36px);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .hero-role .arrow {
+    color: var(--accent);
+    font-style: normal;
+    margin: 0 8px;
+  }
+  .hero-summary {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    max-width: 420px;
+    justify-self: end;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-top: 96px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .stat-num em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+  }
+
+  /* ─────────────── SECTIONS ─────────────── */
+  .section {
+    padding: 140px 0;
+    border-top: 1px solid var(--rule);
+    position: relative;
+  }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    margin-bottom: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--ink-soft);
+  }
+  .section-label .num {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* ─────────────── ABOUT ─────────────── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-statement {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 3.6vw, 46px);
+    line-height: 1.18;
+    font-weight: 300;
+    letter-spacing: -0.015em;
+  }
+  .about-statement em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .about-statement .strike {
+    text-decoration-line: line-through;
+    text-decoration-thickness: 2px;
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+  .about-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-top: 16px;
+  }
+  .info-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px;
+    align-items: start;
+  }
+  .info-row:first-child { padding-top: 0; }
+  .info-label {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--ink-soft);
+    padding-top: 3px;
+  }
+  .info-value {
+    color: var(--ink);
+  }
+
+  /* ─────────────── SKILLS ─────────────── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px;
+  }
+  .skill-cat {
+    border-top: 1px solid var(--ink);
+    padding-top: 24px;
+  }
+  .skill-cat-num {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .skill-cat-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 30px;
+    margin-bottom: 28px;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .skill-tag {
+    padding: 7px 14px;
+    border: 1px solid var(--ink);
+    border-radius: 100px;
+    font-size: 11.5px;
+    transition: all 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+    cursor: default;
+    background: transparent;
+  }
+  .skill-tag:hover {
+    background: var(--ink);
+    color: var(--paper);
+    transform: translateY(-3px);
+  }
+
+  /* ─────────────── EXPERIENCE ─────────────── */
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .exp-item {
+    display: grid;
+    grid-template-columns: 130px 1.2fr 1.4fr;
+    gap: 48px;
+    padding: 44px 16px 44px 0;
+    border-top: 1px solid var(--rule);
+    position: relative;
+    transition: padding 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .exp-item:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .exp-item:hover {
+    padding-left: 16px;
+  }
+  .exp-item:hover::before {
+    width: 100%;
+  }
+  .exp-date {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    padding-top: 6px;
+  }
+  .exp-title {
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .exp-company {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--accent);
+    font-style: italic;
+  }
+  .exp-desc {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .exp-desc p + p {
+    margin-top: 14px;
+  }
+  .exp-desc strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .exp-tech {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ─────────────── PROJECTS ─────────────── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .project-card {
+    border: 1px solid var(--ink);
+    padding: 36px 36px 32px;
+    background: var(--paper-warm);
+    position: relative;
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: translateY(101%);
+    transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+    z-index: -1;
+  }
+  .project-card:hover::before { transform: translateY(0); }
+  .project-card:hover { color: var(--paper); }
+  .project-card:hover .project-num,
+  .project-card:hover .project-tech-label,
+  .project-card:hover .project-meta { color: var(--accent-soft); }
+  .project-card:hover .project-title { color: var(--paper); }
+  .project-card:hover .project-tech-list { color: var(--paper); border-color: rgba(255,255,255,0.2); }
+
+  .project-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 24px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .project-num {
+    color: var(--ink-soft);
+    transition: color 0.4s ease;
+  }
+  .project-meta {
+    color: var(--ink-soft);
+    transition: color 0.4s ease;
+  }
+  .project-title {
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 18px;
+    letter-spacing: -0.01em;
+    transition: color 0.4s ease;
+  }
+  .project-title em { font-style: italic; color: var(--accent); }
+  .project-card:hover .project-title em { color: var(--accent-soft); }
+  .project-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .project-tech-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+    transition: color 0.4s ease;
+  }
+  .project-tech-list {
+    font-size: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule);
+    transition: color 0.4s ease, border-color 0.4s ease;
+  }
+
+  /* ─────────────── EDUCATION ─────────────── */
+  .education-row {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    gap: 48px;
+    padding: 32px 0;
+    align-items: baseline;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .edu-school {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 3.4vw, 44px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .edu-school em { font-style: italic; color: var(--accent); }
+  .edu-degree {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+  .edu-honor {
+    font-style: italic;
+    color: var(--accent);
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+  }
+
+  /* ─────────────── CONTACT ─────────────── */
+  .contact {
+    text-align: center;
+    padding: 180px 0 120px;
+  }
+  .contact-pre {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    margin-bottom: 32px;
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .contact-pre::before, .contact-pre::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--rule);
+  }
+  .contact-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 8vw, 120px);
+    line-height: 0.95;
+    font-weight: 300;
+    margin-bottom: 48px;
+    letter-spacing: -0.03em;
+  }
+  .contact-headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .contact-email {
+    display: inline-block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(22px, 3.2vw, 40px);
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 6px;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  .contact-email:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .contact-links {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .contact-links a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border 0.3s ease, color 0.3s ease;
+    padding-bottom: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .contact-links a:hover {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ─────────────── FOOTER ─────────────── */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 32px 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ─────────────── REVEAL ─────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ─────────────── MOBILE ─────────────── */
+  @media (max-width: 900px) {
+    .container { padding: 0 24px; }
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 18px; font-size: 10px; }
+    .nav-counter { display: none; }
+    .hero-tagline { grid-template-columns: 1fr; gap: 32px; }
+    .hero-summary { justify-self: start; max-width: 100%; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .stat-num { font-size: 44px; }
+    .about-grid { grid-template-columns: 1fr; gap: 56px; }
+    .skills-grid { grid-template-columns: 1fr; gap: 40px; }
+    .exp-item { grid-template-columns: 1fr; gap: 20px; padding: 36px 0; }
+    .exp-item:hover { padding-left: 0; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .education-row { grid-template-columns: 1fr; gap: 16px; }
+    .edu-honor { justify-self: start; }
+    .contact-links { flex-direction: column; gap: 20px; }
+    .section { padding: 100px 0; }
+    .hero { padding: 110px 0 60px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-links { gap: 12px; }
+    .nav-links a:nth-child(2), .nav-links a:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─────────────── NAV ─────────────── -->
+<nav>
+  <div class="nav-logo">
+    <span class="dot"></span>Aryan <em>Mainkar</em>
+  </div>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-counter">© 2026 — Portfolio</div>
+</nav>
+
+<div class="container">
+
+  <!-- ─────────────── HERO ─────────────── -->
+  <section class="hero">
+    <div class="hero-meta reveal">
+      <span class="status-pill">Available for new opportunities</span>
+      <span>Arlington, TX · UTC −06:00</span>
+    </div>
+
+    <h1 class="hero-name reveal">
+      Aryan<br>
+      Main<span class="italic">kar</span><span style="color:var(--accent);">.</span>
+    </h1>
+
+    <div class="hero-tagline">
+      <div class="hero-role reveal reveal-delay-1">
+        UI/UX Developer <span class="arrow">→</span> bridging<br>
+        thoughtful design and shipped code.
+      </div>
+      <p class="hero-summary reveal reveal-delay-2">
+        I design and build user-centered, responsive interfaces — from Figma mockups to pixel-perfect, cross-browser implementations. Comfortable across the full stack, fluent in design systems, and curious about where AI fits into the design process.
+      </p>
+    </div>
+
+    <div class="hero-stats reveal reveal-delay-3">
+      <div>
+        <div class="stat-num">20<em>+</em></div>
+        <div class="stat-label">Production Projects</div>
+      </div>
+      <div>
+        <div class="stat-num">60K<em>+</em></div>
+        <div class="stat-label">Catalog Products Mapped</div>
+      </div>
+      <div>
+        <div class="stat-num">04</div>
+        <div class="stat-label">Years Building</div>
+      </div>
+      <div>
+        <div class="stat-num"><em>BS</em></div>
+        <div class="stat-label">Computer Science · UTA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── ABOUT ─────────────── -->
+  <section class="section" id="about">
+    <div class="section-label"><span class="num">01</span> About</div>
+    <div class="about-grid">
+      <div class="about-statement reveal">
+        I work where <em>design</em> meets <em>engineering</em> — translating mockups and user flows into responsive, accessible interfaces. I care about details: typography that breathes, components that feel right, and code that ships clean.
+      </div>
+      <div class="about-info reveal reveal-delay-1">
+        <div class="info-row">
+          <span class="info-label">Role</span>
+          <span class="info-value">UI/UX Developer · Front-End Engineer</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Currently</span>
+          <span class="info-value">Full Stack Developer at BroadAxis Inc</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Education</span>
+          <span class="info-value">B.S. Computer Science, UT Arlington · Maverick Academic Scholar</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Toolkit</span>
+          <span class="info-value">Figma, Adobe CS, WordPress, Bootstrap, Flutter, AI design tools</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Based in</span>
+          <span class="info-value">Arlington, Texas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── SKILLS ─────────────── -->
+  <section class="section" id="skills">
+    <div class="section-label"><span class="num">02</span> Capabilities</div>
+    <div class="skills-grid">
+      <div class="skill-cat reveal">
+        <div class="skill-cat-num">— A</div>
+        <h3 class="skill-cat-title">Design &amp; Prototyping</h3>
+        <ul class="skill-list">
+          <li class="skill-tag">Figma</li>
+          <li class="skill-tag">Adobe Photoshop</li>
+          <li class="skill-tag">Adobe Illustrator</li>
+          <li class="skill-tag">Adobe Firefly</li>
+          <li class="skill-tag">Midjourney</li>
+          <li class="skill-tag">Google Flow</li>
+          <li class="skill-tag">Wireframing</li>
+          <li class="skill-tag">Prototyping</li>
+          <li class="skill-tag">User Flows</li>
+          <li class="skill-tag">Usability Testing</li>
+          <li class="skill-tag">Design Systems</li>
+          <li class="skill-tag">Component Libraries</li>
+        </ul>
+      </div>
+      <div class="skill-cat reveal reveal-delay-1">
+        <div class="skill-cat-num">— B</div>
+        <h3 class="skill-cat-title">Front-End Development</h3>
+        <ul class="skill-list">
+          <li class="skill-tag">HTML5</li>
+          <li class="skill-tag">CSS3</li>
+          <li class="skill-tag">JavaScript</li>
+          <li class="skill-tag">Bootstrap</li>
+          <li class="skill-tag">WordPress</li>
+          <li class="skill-tag">Elementor</li>
+          <li class="skill-tag">Flutter</li>
+          <li class="skill-tag">Dart</li>
+          <li class="skill-tag">Responsive Design</li>
+          <li class="skill-tag">Cross-Browser Testing</li>
+          <li class="skill-tag">Mobile-First</li>
+        </ul>
+      </div>
+      <div class="skill-cat reveal reveal-delay-2">
+        <div class="skill-cat-num">— C</div>
+        <h3 class="skill-cat-title">Languages, Frameworks &amp; Tools</h3>
+        <ul class="skill-list">
+          <li class="skill-tag">PHP</li>
+          <li class="skill-tag">Python</li>
+          <li class="skill-tag">Flask</li>
+          <li class="skill-tag">Java</li>
+          <li class="skill-tag">Spring Boot</li>
+          <li class="skill-tag">C</li>
+          <li class="skill-tag">MATLAB</li>
+          <li class="skill-tag">R</li>
+          <li class="skill-tag">LaTeX</li>
+          <li class="skill-tag">MySQL</li>
+          <li class="skill-tag">Git</li>
+          <li class="skill-tag">Postman</li>
+          <li class="skill-tag">Claude Code</li>
+          <li class="skill-tag">Microsoft CRM</li>
+          <li class="skill-tag">Azure</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── EXPERIENCE ─────────────── -->
+  <section class="section" id="work">
+    <div class="section-label"><span class="num">03</span> Selected Work</div>
+    <div class="experience-list">
+
+      <div class="exp-item reveal">
+        <div class="exp-date">Feb 2026<br>— Present</div>
+        <div>
+          <h3 class="exp-title">Full Stack Developer</h3>
+          <div class="exp-company">BroadAxis Inc</div>
+        </div>
+        <div class="exp-desc">
+          <p>Owned the <strong>full UI/UX and front-end development lifecycle</strong> across 20+ projects (e-commerce, corporate, portfolio) — designing mockups and user flows in Figma and Adobe Photoshop, then implementing pixel-perfect, responsive, cross-browser sites using WordPress, Elementor, Bootstrap, PHP, HTML, CSS, and MySQL.</p>
+          <p>Integrated <strong>AI-driven image generation</strong> workflows (Midjourney, Adobe Firefly, Google Flow) into production, cutting content turnaround time and delivering visually polished, on-brand interfaces without external design bottlenecks.</p>
+          <p>Developed <strong>custom WordPress plugins and a reusable component library</strong> to standardize UI patterns and handle YMM (Year/Make/Model) mapping across a 60,000+ product catalog, ensuring visual consistency and mapping accuracy.</p>
+          <div class="exp-tech">Figma · WordPress · Elementor · Bootstrap · Adobe CS · PHP · MySQL · Git</div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-date">Mar 2025<br>— Dec 2025</div>
+        <div>
+          <h3 class="exp-title">Cybersecurity Research Volunteer</h3>
+          <div class="exp-company">University of Texas at Arlington</div>
+        </div>
+        <div class="exp-desc">
+          <p>Supported <strong>cybersecurity curriculum development</strong> under Dr. Nadra Guizani by testing course materials and creating tutorial-based content for student organizations.</p>
+          <p>Conducted <strong>literature reviews</strong> and analyzed Google Scholar–indexed AI/ML implementations to publish a cybersecurity research paper; contributed to academic writing, resource curation, and submission planning.</p>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-date">May 2024<br>— Aug 2024</div>
+        <div>
+          <h3 class="exp-title">Flutter Developer Intern</h3>
+          <div class="exp-company">Kshan Tech Soft Pvt Ltd · Pune, India</div>
+        </div>
+        <div class="exp-desc">
+          <p>Developed <strong>responsive web pages</strong> using Flutter and Dart per client mockups — building custom icons, login flows, and scroll-based navigation to enhance UX and visual polish.</p>
+          <p>Provided <strong>cross-browser and cross-device testing</strong> across Android, Windows, and Linux to ensure consistent UI behavior and visual fidelity.</p>
+          <div class="exp-tech">Flutter · Dart · Figma · HTML · CSS</div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-date">May 2023<br>— Aug 2023</div>
+        <div>
+          <h3 class="exp-title">Software Developer Intern</h3>
+          <div class="exp-company">Viridium AI · Seattle, WA</div>
+        </div>
+        <div class="exp-desc">
+          <p>Implemented <strong>Azure data ingestion pipelines</strong> for efficient processing using Azure Data Factory.</p>
+          <p>Applied simple <strong>ML techniques</strong>, including random forest and linear regression, for environmental sustainability insights.</p>
+          <p>Developed a <strong>logging &amp; monitoring framework</strong> for site incidents using Spring Boot (SLF4J, LOG4J).</p>
+          <div class="exp-tech">MySQL · Spring Boot · Azure DevOps · Git</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─────────────── PROJECTS ─────────────── -->
+  <section class="section" id="projects">
+    <div class="section-label"><span class="num">04</span> Projects</div>
+    <div class="projects-grid">
+
+      <a class="project-card reveal" href="https://github.com/aryanmainkar" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+        <div class="project-head">
+          <span class="project-num">№ 01</span>
+          <span class="project-meta">Jan — May 2024</span>
+        </div>
+        <h3 class="project-title">LSB Steganography <em>Application</em></h3>
+        <p class="project-desc">Full-stack web app with a clean, responsive UI for hiding and retrieving messages inside images. Designed the upload/preview flow and built the encoding pipeline end-to-end.</p>
+        <div class="project-tech-label">Stack</div>
+        <div class="project-tech-list">Flask · Python · GCP · Firestore</div>
+      </a>
+
+      <a class="project-card reveal reveal-delay-1" href="https://github.com/aryanmainkar" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+        <div class="project-head">
+          <span class="project-num">№ 02</span>
+          <span class="project-meta">Jan — May 2024</span>
+        </div>
+        <h3 class="project-title">Keypoint Detection <em>HOG &amp; SIFT</em></h3>
+        <p class="project-desc">Computer vision project applying SIFT and RANSAC for feature matching across the CIFAR-10 dataset. Explored the trade-offs between descriptor robustness and computational cost.</p>
+        <div class="project-tech-label">Stack</div>
+        <div class="project-tech-list">Python · Jupyter · OpenCV · NumPy</div>
+      </a>
+
+      <a class="project-card reveal" href="https://github.com/aryanmainkar" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+        <div class="project-head">
+          <span class="project-num">№ 03</span>
+          <span class="project-meta">Aug — Dec 2023</span>
+        </div>
+        <h3 class="project-title">Customer Spending <em>Prediction Model</em></h3>
+        <p class="project-desc">Random forest model built with Python and scikit-learn to predict customer spending from demographic and payment data. Focused on feature engineering and model interpretability.</p>
+        <div class="project-tech-label">Stack</div>
+        <div class="project-tech-list">Python · scikit-learn · pandas</div>
+      </a>
+
+      <a class="project-card reveal reveal-delay-1" href="https://github.com/aryanmainkar" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+        <div class="project-head">
+          <span class="project-num">№ 04</span>
+          <span class="project-meta">More on GitHub →</span>
+        </div>
+        <h3 class="project-title"><em>Open Source</em> &amp; experiments</h3>
+        <p class="project-desc">Smaller experiments, design explorations, and learning projects. Always tinkering — visit the repository for the full collection of WIPs and one-offs.</p>
+        <div class="project-tech-label">Find me on</div>
+        <div class="project-tech-list">github.com/aryanmainkar</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ─────────────── EDUCATION ─────────────── -->
+  <section class="section" id="education">
+    <div class="section-label"><span class="num">05</span> Education</div>
+    <div class="education-row reveal">
+      <div class="exp-date">Aug 2020<br>— Dec 2024</div>
+      <div>
+        <h3 class="edu-school">University of Texas at <em>Arlington</em></h3>
+        <div class="edu-degree">Bachelor of Science in Computer Science · Arlington, TX</div>
+      </div>
+      <div class="edu-honor">Maverick Academic Scholar</div>
+    </div>
+  </section>
+
+  <!-- ─────────────── CONTACT ─────────────── -->
+  <section class="contact" id="contact">
+    <div class="contact-pre reveal">Let's build something</div>
+    <h2 class="contact-headline reveal reveal-delay-1">
+      Got a project<br>
+      <em>in mind?</em>
+    </h2>
+    <a class="contact-email reveal reveal-delay-2" href="mailto:aryan.mainkar@mavs.uta.edu">aryan.mainkar@mavs.uta.edu</a>
+    <div class="contact-links reveal reveal-delay-3">
+      <a href="https://www.linkedin.com/in/aryanmainkar" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://github.com/aryanmainkar" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="tel:+19254362418">+1 (925) 436-2418</a>
+    </div>
+  </section>
+
+  <!-- ─────────────── FOOTER ─────────────── -->
+  <footer>
+    <div>© 2026 Aryan Mainkar</div>
+    <div>Designed &amp; built with care · Arlington, TX</div>
+    <div>v1.0 — Portfolio</div>
+  </footer>
+
+</div>
+
+<script>
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Smooth nav highlighting
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
