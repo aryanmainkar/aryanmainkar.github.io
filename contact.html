@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Aryan Mainkar</title>
+<meta name="description" content="Get in touch with Aryan Mainkar — UI/UX Developer & Front-End Engineer. One call away. Email, phone, LinkedIn, GitHub.">
+<meta name="theme-color" content="#0a0a0a">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:          #0a0a0a;
+    --bg-elev:     #141414;
+    --bg-elev-2:   #1c1c1c;
+    --ink:         #f5f5f5;
+    --ink-soft:    #a3a3a3;
+    --ink-mute:    #6b6b6b;
+    --accent:      #39FF14;
+    --accent-soft: #9fe8a0;
+    --accent-hot:  #5cff3e;
+    --accent-glow: rgba(57, 255, 20, 0.28);
+    --rule:        rgba(255, 255, 255, 0.10);
+    --rule-strong: rgba(255, 255, 255, 0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); }
+  ::selection { background: var(--accent); color: var(--bg); }
+  body {
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14.5px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: 'tnum' 1; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ambient noise */
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* glow orbs */
+  .orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.22; }
+  .orb-1 { width: 720px; height: 720px; top: -180px; left: -200px;
+    background: radial-gradient(circle, rgba(57,255,20,0.35), transparent 70%); }
+  .orb-2 { width: 640px; height: 640px; bottom: -200px; right: -180px;
+    background: radial-gradient(circle, rgba(57,255,20,0.28), transparent 70%); }
+
+  /* nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; padding: 22px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-logo {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 400;
+    letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo .dot {
+    width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+  .nav-logo em { font-style: italic; color: var(--ink-soft); font-weight: 300; }
+  .nav-links { display: flex; gap: 36px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .nav-links a {
+    color: var(--ink-soft); padding: 6px 0; border-bottom: 1px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+  .nav-links a:hover, .nav-links a.is-active { color: var(--accent); border-color: var(--accent); }
+  .nav-cta {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 9px 18px;
+    border: 1px solid var(--accent); color: var(--accent); border-radius: 100px;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--bg); }
+  @media (max-width: 800px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+  }
+
+  /* layout */
+  .container { max-width: 1320px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 1; }
+  @media (max-width: 800px) { .container { padding: 0 24px; } }
+
+  /* hero */
+  .contact-hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 140px 0 80px;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.2em;
+    color: var(--ink-mute); text-transform: uppercase; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow::before {
+    content: ''; width: 24px; height: 1px; background: var(--accent);
+  }
+  .contact-headline {
+    font-family: 'Fraunces', serif; font-size: clamp(64px, 11vw, 180px);
+    line-height: 0.92; font-weight: 300; letter-spacing: -0.04em; margin-bottom: 40px;
+  }
+  .contact-headline em {
+    font-style: italic; color: var(--accent);
+    text-shadow: 0 0 40px rgba(57,255,20,0.3);
+  }
+  .contact-headline .period { color: var(--accent); }
+  .contact-sub {
+    max-width: 720px; font-size: 17px; line-height: 1.6; color: var(--ink-soft);
+    margin-bottom: 48px;
+  }
+  .contact-sub strong { color: var(--ink); font-weight: 500; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 8px 18px; border: 1px solid var(--rule-strong);
+    border-radius: 100px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink); margin-bottom: 56px;
+  }
+  .status-pill::before {
+    content: ''; width: 8px; height: 8px; background: var(--accent-soft);
+    border-radius: 50%; box-shadow: 0 0 0 0 rgba(57,255,20,0.7);
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.55); }
+    70%  { box-shadow: 0 0 0 9px rgba(57, 255, 20, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
+  }
+
+  /* contact methods grid */
+  .methods {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    margin-top: 80px; padding-bottom: 120px;
+  }
+  @media (max-width: 800px) { .methods { grid-template-columns: 1fr; } }
+  .method-card {
+    background: var(--bg-elev); border: 1px solid var(--rule);
+    padding: 32px 36px; display: flex; align-items: center; gap: 24px;
+    transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.65,0,0.35,1);
+    position: relative; overflow: hidden;
+  }
+  .method-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(57,255,20,0.04) 100%);
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .method-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .method-card:hover::before { opacity: 1; }
+  .method-icon {
+    width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%;
+    border: 1px solid var(--rule-strong); display: grid; place-items: center;
+    color: var(--accent); transition: background 0.3s ease;
+  }
+  .method-card:hover .method-icon { background: rgba(57,255,20,0.06); }
+  .method-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+  .method-body { flex: 1; min-width: 0; position: relative; z-index: 1; }
+  .method-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .method-value {
+    font-size: 18px; color: var(--ink); word-break: break-word;
+  }
+  .method-copy {
+    background: none; border: 1px solid var(--rule-strong); color: var(--ink-soft);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 6px 12px; border-radius: 100px; cursor: pointer;
+    transition: all 0.25s ease; flex-shrink: 0;
+  }
+  .method-copy:hover { border-color: var(--accent); color: var(--accent); }
+  .method-copy.copied { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  /* SLA strip */
+  .sla {
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 32px 0; display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px; margin: 0 0 120px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-soft);
+  }
+  .sla strong { color: var(--accent); font-weight: 500; }
+
+  /* recruiter pitch */
+  .pitch {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    padding-bottom: 140px;
+  }
+  @media (max-width: 900px) { .pitch { grid-template-columns: 1fr; gap: 32px; } }
+  .pitch-block h3 {
+    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 400;
+    margin-bottom: 24px; letter-spacing: -0.01em;
+  }
+  .pitch-block h3 em { color: var(--accent); font-style: italic; }
+  .pitch-list { list-style: none; }
+  .pitch-list li {
+    padding: 14px 0; border-bottom: 1px solid var(--rule);
+    color: var(--ink-soft); font-size: 15px;
+    display: flex; gap: 14px; align-items: baseline;
+  }
+  .pitch-list li::before {
+    content: '→'; color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .pitch-cta {
+    margin-top: 32px; display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; border: 1px solid var(--accent); color: var(--accent);
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; border-radius: 100px;
+    transition: all 0.25s ease;
+  }
+  .pitch-cta:hover { background: var(--accent); color: var(--bg); }
+
+  /* footer */
+  footer {
+    border-top: 1px solid var(--rule); padding: 32px 48px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 18px;
+    color: var(--ink-mute); font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .gold-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: 8px; box-shadow: 0 0 8px var(--accent-glow); }
+  @media (max-width: 800px) { footer { padding: 24px; flex-direction: column; align-items: flex-start; } }
+
+  /* reveal animation (CSS-only, no GSAP needed) */
+  .reveal { opacity: 0; transform: translateY(20px); animation: reveal 1s cubic-bezier(0.25,0.1,0.25,1) forwards; }
+  .reveal-1 { animation-delay: 0.1s; }
+  .reveal-2 { animation-delay: 0.25s; }
+  .reveal-3 { animation-delay: 0.4s; }
+  .reveal-4 { animation-delay: 0.55s; }
+  @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { animation: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+<nav>
+  <a class="nav-logo" href="index.html"><span class="dot"></span>Aryan <em>Mainkar</em></a>
+  <div class="nav-links">
+    <a href="index.html#work">Work</a>
+    <a href="index.html#skills">Skills</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="resume.html">Resume</a>
+    <a href="contact.html" class="is-active">Contact</a>
+  </div>
+  <a class="nav-cta" href="tel:+19254362418">Call →</a>
+</nav>
+
+<div class="container">
+
+  <section class="contact-hero">
+    <div class="eyebrow reveal">00 / Contact</div>
+    <span class="status-pill reveal reveal-1">Available for new opportunities</span>
+    <h1 class="contact-headline reveal reveal-1">
+      I'm one call<br>
+      <em>away</em><span class="period">.</span>
+    </h1>
+    <p class="contact-sub reveal reveal-2">
+      <strong>UI/UX Developer & Front-End Engineer</strong> based in Arlington, TX. Currently a Full Stack Developer at <strong>BroadAxis Inc</strong>, B.S. Computer Science from UT Arlington (Maverick Academic Scholar). Open to senior front-end and design-engineering roles. Recruiters &mdash; let's talk.
+    </p>
+
+    <div class="methods reveal reveal-3">
+      <div class="method-card">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+        </div>
+        <div class="method-body">
+          <div class="method-label">Email</div>
+          <a class="method-value" href="mailto:aryan.mainkar@mavs.uta.edu">aryan.mainkar@mavs.uta.edu</a>
+        </div>
+        <button class="method-copy" data-copy="aryan.mainkar@mavs.uta.edu">Copy</button>
+      </div>
+
+      <div class="method-card">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="method-body">
+          <div class="method-label">Phone</div>
+          <a class="method-value" href="tel:+19254362418">+1 (925) 436-2418</a>
+        </div>
+        <button class="method-copy" data-copy="+19254362418">Copy</button>
+      </div>
+
+      <div class="method-card">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </div>
+        <div class="method-body">
+          <div class="method-label">LinkedIn</div>
+          <a class="method-value" href="https://www.linkedin.com/in/aryanmainkar" target="_blank" rel="noopener">linkedin.com/in/aryanmainkar</a>
+        </div>
+        <button class="method-copy" data-copy="https://www.linkedin.com/in/aryanmainkar">Copy</button>
+      </div>
+
+      <div class="method-card">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </div>
+        <div class="method-body">
+          <div class="method-label">GitHub</div>
+          <a class="method-value" href="https://github.com/aryanmainkar" target="_blank" rel="noopener">github.com/aryanmainkar</a>
+        </div>
+        <button class="method-copy" data-copy="https://github.com/aryanmainkar">Copy</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="sla reveal">
+    <div><strong>~24h</strong> response on weekdays</div>
+    <div>Arlington, TX · UTC −06:00 (CST)</div>
+    <div>Open to remote · hybrid · on-site</div>
+  </div>
+
+  <section class="pitch">
+    <div class="pitch-block">
+      <h3>What I'm <em>looking for</em></h3>
+      <ul class="pitch-list">
+        <li>Senior front-end / UI engineering roles</li>
+        <li>Design-engineering hybrid teams</li>
+        <li>Product organizations that ship to real users</li>
+        <li>Companies building tooling, platforms, or AI-augmented workflows</li>
+        <li>Teams that care about craft &mdash; typography, motion, accessibility</li>
+      </ul>
+    </div>
+    <div class="pitch-block">
+      <h3>What I <em>bring</em></h3>
+      <ul class="pitch-list">
+        <li>20+ production projects across e-commerce, corporate, and portfolio builds</li>
+        <li>Full-stack range: WordPress, PHP, Python, Flask, Spring Boot, MySQL</li>
+        <li>UI/UX from Figma mockups to pixel-perfect cross-browser implementations</li>
+        <li>Custom WordPress plugins shipping at 60,000+ product catalog scale</li>
+        <li>AI-augmented workflows (Claude Code, Midjourney, Adobe Firefly) integrated into production</li>
+      </ul>
+      <a class="pitch-cta" href="resume.html">View resume →</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div>© 2026 Aryan Mainkar</div>
+  <div>Designed &amp; built with care · Arlington, TX</div>
+  <div><span class="gold-dot"></span>v2.1 — Portfolio</div>
+</footer>
+
+<script>
+  (function(){
+    /* copy-to-clipboard */
+    document.querySelectorAll('.method-copy').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          const original = btn.textContent;
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.classList.remove('copied');
+          }, 1600);
+        } catch (e) { console.warn('Clipboard write failed', e); }
+      });
+    });
+  })();
+</script>
+
+<script src="assets/js/chat-widget.js" defer></script>
+
+</body>
+</html>

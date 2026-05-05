@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aryan Mainkar — UI/UX Developer</title>
 <meta name="description" content="UI/UX Developer & Front-End Engineer. Designing and building user-centered, responsive interfaces with Figma, WordPress, Bootstrap, and AI-driven design tools.">
-<meta name="theme-color" content="#0a0908">
+<meta name="theme-color" content="#0a0a0a">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,21 +23,23 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="assets/js/chat-widget.js" defer></script>
 
 <style>
   :root {
-    --bg:          #0a0908;
-    --bg-elev:     #141210;
-    --bg-elev-2:   #1c1a17;
-    --ink:         #f5f1e8;
-    --ink-soft:    #a8a097;
-    --ink-mute:    #6b645c;
-    --accent:      #d4a574;
-    --accent-hot:  #e8b87a;
-    --accent-glow: rgba(212, 165, 116, 0.35);
-    --rule:        rgba(245, 241, 232, 0.10);
-    --rule-strong: rgba(245, 241, 232, 0.24);
-    --green:       #8aab6a;
+    --bg:          #0a0a0a;
+    --bg-elev:     #141414;
+    --bg-elev-2:   #1c1c1c;
+    --ink:         #f5f5f5;
+    --ink-soft:    #a3a3a3;
+    --ink-mute:    #6b6b6b;
+    --accent:      #39FF14;          /* full neon — CTA / highlight only */
+    --accent-soft: #9fe8a0;          /* desaturated neon — body links, dots */
+    --accent-hot:  #5cff3e;
+    --accent-glow: rgba(57, 255, 20, 0.28);
+    --rule:        rgba(255, 255, 255, 0.10);
+    --rule-strong: rgba(255, 255, 255, 0.22);
+    --green:       #9fe8a0;          /* legacy alias → accent-soft */
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -86,25 +88,25 @@
     position: absolute;
     border-radius: 50%;
     filter: blur(120px);
-    opacity: 0.55;
+    opacity: 0.25;
     will-change: transform;
     transition: opacity 1.2s ease;
   }
   .orb-1 {
     width: 720px; height: 720px;
     top: -160px; left: -180px;
-    background: radial-gradient(circle, rgba(212,165,116,0.45), rgba(212,165,116,0) 70%);
+    background: radial-gradient(circle, rgba(57,255,20,0.32), rgba(57,255,20,0) 70%);
   }
   .orb-2 {
     width: 640px; height: 640px;
     top: 240vh; right: -200px;
-    background: radial-gradient(circle, rgba(212,165,116,0.32), rgba(212,165,116,0) 70%);
+    background: radial-gradient(circle, rgba(57,255,20,0.22), rgba(57,255,20,0) 70%);
   }
   .orb-3 {
     width: 880px; height: 880px;
     bottom: -260px; left: 50%;
     transform: translateX(-50%);
-    background: radial-gradient(circle, rgba(212,165,116,0.4), rgba(212,165,116,0) 70%);
+    background: radial-gradient(circle, rgba(57,255,20,0.28), rgba(57,255,20,0) 70%);
   }
 
   /* ─────────── custom cursor ─────────── */
@@ -142,7 +144,7 @@
   body.cursor-ready { cursor: none; }
   body.cursor-ready a, body.cursor-ready button, body.cursor-ready .skill-tag, body.cursor-ready .project-card { cursor: none; }
   body.cursor-ready .cursor-ring, body.cursor-ready .cursor-dot { opacity: 1; }
-  body.cursor-link .cursor-ring { width: 60px; height: 60px; background: rgba(212,165,116,0.12); border-color: var(--accent); }
+  body.cursor-link .cursor-ring { width: 60px; height: 60px; background: rgba(57,255,20,0.12); border-color: var(--accent); }
   body.cursor-link .cursor-dot { opacity: 0; }
   body.cursor-view .cursor-ring {
     width: 110px; height: 44px; border-radius: 100px;
@@ -247,6 +249,21 @@
     letter-spacing: 0.18em;
     color: var(--ink-mute);
   }
+  .nav-cta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 9px 18px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 100px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--bg); }
+  @media (max-width: 800px) {
+    .nav-cta { padding: 7px 14px; font-size: 11px; }
+  }
 
   /* ─────────── HERO ─────────── */
   .hero {
@@ -281,13 +298,13 @@
     width: 8px; height: 8px;
     background: var(--green);
     border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(138, 171, 106, 0.7);
+    box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.7);
     animation: pulse 2.4s infinite;
   }
   @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(138, 171, 106, 0.55); }
-    70%  { box-shadow: 0 0 0 9px rgba(138, 171, 106, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(138, 171, 106, 0); }
+    0%   { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.55); }
+    70%  { box-shadow: 0 0 0 9px rgba(57, 255, 20, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
   }
 
   h1.hero-name {
@@ -352,11 +369,59 @@
     font-weight: 400;
   }
 
+  .hero-cta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 64px;
+    padding: 22px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-cta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .hero-cta-line {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    flex: 1 1 auto;
+  }
+  .hero-cta-line em {
+    font-style: italic;
+    color: var(--accent);
+    text-shadow: 0 0 22px rgba(57,255,20,0.32);
+  }
+  .hero-cta-line .period { color: var(--accent); }
+  .hero-cta-line:hover { opacity: 0.78; }
+  .hero-cta-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 11px 22px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 100px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.25s ease, color 0.25s ease;
+    white-space: nowrap;
+  }
+  .hero-cta-btn:hover { background: var(--accent); color: var(--bg); }
+
   .hero-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 32px;
-    margin-top: 96px;
+    margin-top: 64px;
     padding-top: 32px;
     border-top: 1px solid var(--rule);
   }
@@ -578,14 +643,14 @@
     border-radius: 100px;
     font-size: 11.5px;
     color: var(--ink-soft);
-    background: rgba(245, 241, 232, 0.02);
+    background: rgba(255, 255, 255, 0.02);
     transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
     cursor: default;
   }
   .skill-tag:hover {
     border-color: var(--accent);
     color: var(--accent);
-    background: rgba(212, 165, 116, 0.06);
+    background: rgba(57, 255, 20, 0.06);
     transform: translateY(-3px);
     box-shadow: 0 6px 24px -8px var(--accent-glow);
   }
@@ -684,8 +749,8 @@
   }
   .project-card {
     flex-shrink: 0;
-    width: clamp(440px, 62vw, 720px);
-    height: min(78vh, 720px);
+    width: clamp(380px, 48vw, 580px);
+    height: min(74vh, 660px);
     background: var(--bg-elev);
     border: 1px solid var(--rule);
     padding: 40px;
@@ -730,30 +795,30 @@
   .project-mesh-1 {
     background:
       radial-gradient(circle at 20% 30%, #5fb1c5 0%, transparent 45%),
-      radial-gradient(circle at 75% 70%, #d4a574 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, #2a3f4d 0%, transparent 60%),
-      #0e1a22;
+      radial-gradient(circle at 75% 70%, #39FF14 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, #1a2730 0%, transparent 60%),
+      #0a1218;
   }
   .project-mesh-2 {
     background:
       radial-gradient(circle at 30% 70%, #c5587c 0%, transparent 45%),
-      radial-gradient(circle at 80% 25%, #d4a574 0%, transparent 45%),
-      radial-gradient(circle at 55% 50%, #3a1f2e 0%, transparent 60%),
-      #1a0e16;
+      radial-gradient(circle at 80% 25%, #39FF14 0%, transparent 45%),
+      radial-gradient(circle at 55% 50%, #2a1b25 0%, transparent 60%),
+      #14090f;
   }
   .project-mesh-3 {
     background:
       radial-gradient(circle at 25% 35%, #6b9b5c 0%, transparent 45%),
-      radial-gradient(circle at 75% 75%, #d4a574 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, #2a3a23 0%, transparent 60%),
-      #121a0e;
+      radial-gradient(circle at 75% 75%, #5cff3e 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, #1f2a1a 0%, transparent 60%),
+      #0c130a;
   }
   .project-mesh-4 {
     background:
-      radial-gradient(circle at 50% 50%, #e8b87a 0%, transparent 50%),
-      radial-gradient(circle at 20% 80%, #8a6938 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, #d4a574 0%, transparent 50%),
-      #2a1f12;
+      radial-gradient(circle at 50% 50%, #5cff3e 0%, transparent 50%),
+      radial-gradient(circle at 20% 80%, #2a4a30 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, #39FF14 0%, transparent 50%),
+      #0e1410;
   }
 
   .project-head {
@@ -1059,9 +1124,10 @@
     <a href="#work">Work</a>
     <a href="#skills">Skills</a>
     <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
+    <a href="resume.html">Resume</a>
+    <a href="contact.html">Contact</a>
   </div>
-  <div class="nav-counter">© 2026 — Portfolio</div>
+  <a class="nav-cta" href="contact.html">Let's talk →</a>
 </nav>
 
 <div class="container" id="top">
@@ -1085,6 +1151,12 @@
       <p class="hero-summary reveal reveal-delay-2">
         I design and build user-centered, responsive interfaces — from Figma mockups to pixel-perfect, cross-browser implementations. Comfortable across the full stack, fluent in design systems, and curious about where AI fits into the design process.
       </p>
+    </div>
+
+    <div class="hero-cta reveal reveal-delay-3">
+      <span class="hero-cta-label">For recruiters —</span>
+      <a class="hero-cta-line" href="contact.html">I'm one call <em>away</em><span class="period">.</span></a>
+      <a class="hero-cta-btn" href="tel:+19254362418">Call →</a>
     </div>
 
     <div class="hero-stats reveal reveal-delay-3">
@@ -1295,7 +1367,7 @@
     <div class="h-pin-stage">
       <div class="h-pin-track">
 
-        <a class="project-card" href="https://github.com/aryanmainkar" target="_blank" rel="noopener">
+        <a class="project-card" href="https://github.com/aryanmainkar/Steganography-Website" target="_blank" rel="noopener">
           <div class="project-cover"><div class="project-mesh project-mesh-1"></div></div>
           <div class="project-head">
             <span class="project-num">№ 01</span>
@@ -1307,7 +1379,7 @@
           <div class="project-tech-list">Flask · Python · GCP · Firestore</div>
         </a>
 
-        <a class="project-card" href="https://github.com/aryanmainkar" target="_blank" rel="noopener">
+        <a class="project-card" href="https://github.com/aryanmainkar/Matching-and-Image-stitching-with-SIFT-and-RANSAC." target="_blank" rel="noopener">
           <div class="project-cover"><div class="project-mesh project-mesh-2"></div></div>
           <div class="project-head">
             <span class="project-num">№ 02</span>
@@ -1319,7 +1391,7 @@
           <div class="project-tech-list">Python · Jupyter · OpenCV · NumPy</div>
         </a>
 
-        <a class="project-card" href="https://github.com/aryanmainkar" target="_blank" rel="noopener">
+        <a class="project-card" href="https://github.com/aryanmainkar/Customer-Sales-Data-Analysis" target="_blank" rel="noopener">
           <div class="project-cover"><div class="project-mesh project-mesh-3"></div></div>
           <div class="project-head">
             <span class="project-num">№ 03</span>
@@ -1350,7 +1422,7 @@
   <div class="container">
     <div class="h-pin-rail" aria-hidden="true"></div>
     <div class="h-pin-hint">
-      <span>Drag · Scroll</span>
+      <span>Scroll · ← → keys</span>
       <span>04 — Projects</span>
     </div>
   </div>
@@ -1624,6 +1696,8 @@
     const hRail = document.querySelector('.h-pin-rail');
     if (hPin && hTrack && !isMobile) {
       const getDistance = () => Math.max(0, hTrack.scrollWidth - innerWidth);
+      /* scroll budget: 0.7× the horizontal distance so users escape the pin sooner */
+      const getScrollLength = () => Math.round(getDistance() * 0.7);
       const tween = gsap.to(hTrack, {
         x: () => -getDistance(),
         ease: 'none'
@@ -1631,14 +1705,30 @@
       ScrollTrigger.create({
         trigger: hPin,
         start: 'top top',
-        end: () => '+=' + getDistance(),
+        end: () => '+=' + getScrollLength(),
         pin: '.h-pin-stage',
-        scrub: 1,
+        scrub: true,            /* instant follow — no 1s ease lag */
         invalidateOnRefresh: true,
         animation: tween,
         onUpdate: (self) => {
           if (hRail) hRail.style.setProperty('--rail', (self.progress * 100) + '%');
         }
+      });
+
+      /* keyboard arrows + horizontal trackpad/wheel inside the pinned section */
+      const cardCount = document.querySelectorAll('.project-card').length;
+      const stepBy = (n) => {
+        const step = (window.innerHeight * 0.8) / Math.max(1, cardCount - 1);
+        const target = window.scrollY + step * n;
+        if (window.lenis) window.lenis.scrollTo(target, { duration: 0.6 });
+        else window.scrollTo({ top: target, behavior: 'smooth' });
+      };
+      window.addEventListener('keydown', (e) => {
+        const rect = hPin.getBoundingClientRect();
+        const inView = rect.top <= 1 && rect.bottom > innerHeight;
+        if (!inView) return;
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); stepBy(1); }
+        else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); stepBy(-1); }
       });
     }
 
