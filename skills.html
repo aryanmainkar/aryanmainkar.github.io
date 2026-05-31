@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills — Aryan Mainkar</title>
+<meta name="description" content="A filterable matrix of every framework, language, and design tool Aryan Mainkar has shipped with — with years of experience and where each was used.">
+<meta name="theme-color" content="#0a0a0a">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<script>
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-anim');
+  }
+</script>
+
+<link rel="stylesheet" href="assets/css/shared.css">
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="assets/js/shared.js" defer></script>
+<script src="assets/js/chat-widget.js" defer></script>
+
+<style>
+  /* ─────────── PAGE HEAD ─────────── */
+  .page-head {
+    padding: 180px 0 80px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .page-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(56px, 11vw, 168px);
+    line-height: 0.92;
+    font-weight: 300;
+    letter-spacing: -0.035em;
+    margin-bottom: 32px;
+    color: var(--ink);
+  }
+  .page-title em { font-style: italic; color: var(--accent); }
+  .page-lead {
+    max-width: 620px;
+    font-size: 14.5px;
+    line-height: 1.78;
+    color: var(--ink-soft);
+  }
+
+  /* ─────────── FILTER BAR ─────────── */
+  .filter-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 22px 0;
+    margin-top: 0;
+    background: rgba(10, 9, 8, 0.7);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .filter-bar-inner {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .filter-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.65,0,0.35,1);
+  }
+  .filter-chip:hover {
+    color: var(--ink);
+    border-color: var(--ink-soft);
+  }
+  .filter-chip.is-active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .filter-counter {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .filter-counter b {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ─────────── GRID ─────────── */
+  .skills-section {
+    padding: 80px 0 140px;
+  }
+  .grid-group {
+    margin-bottom: 64px;
+  }
+  .group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .group-title b {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .skill-tile {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 100%;
+    padding: 22px 22px;
+    border: 1px solid var(--rule);
+    background: rgba(255,255,255,0.015);
+    color: var(--ink);
+    cursor: pointer;
+    font: inherit;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s cubic-bezier(0.65,0,0.35,1);
+  }
+  .skill-tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.6s cubic-bezier(0.65,0,0.35,1);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+  .skill-tile:hover {
+    border-color: var(--accent);
+    background: rgba(57,255,20,0.04);
+    transform: translateY(-3px);
+  }
+  .skill-tile:hover::before { width: 100%; }
+  .skill-tile.is-open {
+    border-color: var(--accent);
+    background: rgba(57,255,20,0.06);
+  }
+  .skill-tile.is-open::before { width: 100%; }
+  .skill-tile.is-hidden { display: none; }
+
+  .tile-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .tile-name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .tile-years {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .tile-cats {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tile-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+  }
+
+  .tile-body {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.65,0,0.35,1), opacity 0.35s ease, margin-top 0.4s ease;
+  }
+  .skill-tile.is-open .tile-body {
+    max-height: 240px;
+    opacity: 1;
+    margin-top: 16px;
+  }
+  .tile-proof {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .tile-where {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-top: 10px;
+    border-top: 1px dashed var(--rule);
+  }
+  .tile-where a {
+    color: var(--accent-soft);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border 0.3s ease, color 0.3s ease;
+  }
+  .tile-where a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ─────────── EMPTY STATE ─────────── */
+  .empty-state {
+    display: none;
+    padding: 80px 0;
+    text-align: center;
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .empty-state.is-shown { display: block; }
+
+  /* ─────────── CTA STRIP ─────────── */
+  .cta-strip {
+    padding: 80px 0 140px;
+    text-align: center;
+    border-top: 1px solid var(--rule);
+  }
+  .cta-strip h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 6vw, 84px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .cta-strip h2 em { font-style: italic; color: var(--accent); }
+  .cta-strip-actions {
+    display: inline-flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cta-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 14px 26px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  .cta-btn.is-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .cta-btn:hover { transform: translateY(-2px); }
+  .cta-btn.is-primary:hover { background: var(--accent-hot); border-color: var(--accent-hot); }
+  .cta-btn:not(.is-primary):hover { background: var(--accent); color: var(--bg); }
+
+  @media (max-width: 900px) {
+    .page-head { padding: 130px 0 60px; }
+    .filter-counter { display: none; }
+    .skill-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .tile-name { font-size: 18px; }
+    .skills-section { padding: 56px 0 100px; }
+  }
+  @media (max-width: 480px) {
+    .skill-grid { grid-template-columns: 1fr; }
+    .filter-bar { padding: 14px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html" aria-label="Aryan Mainkar — home">
+    <span class="dot"></span>Aryan <em>Mainkar</em>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#work">Work</a>
+    <a href="skills.html">Skills</a>
+    <a href="projects.html">Projects</a>
+    <a href="resume.html">Resume</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a class="nav-cta" href="contact.html">Let's talk →</a>
+</nav>
+
+<div class="container">
+
+  <!-- ─────────── PAGE HEAD ─────────── -->
+  <header class="page-head">
+    <div class="page-eyebrow reveal">02 / Skills</div>
+    <h1 class="page-title reveal" data-drift>The toolkit, <em>verified</em>.</h1>
+    <p class="page-lead reveal reveal-delay-1">Every framework, language, and design tool I've shipped with — filterable by domain, with how long I've used it and where it actually showed up. No theoretical "exposure to" lines.</p>
+  </header>
+
+  <!-- ─────────── FILTER BAR ─────────── -->
+  <div class="filter-bar">
+    <div class="filter-bar-inner">
+      <span class="filter-label">Filter</span>
+      <div class="filter-chips" role="tablist">
+        <button class="filter-chip is-active" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter-chip" data-filter="design" aria-pressed="false">Design</button>
+        <button class="filter-chip" data-filter="frontend" aria-pressed="false">Frontend</button>
+        <button class="filter-chip" data-filter="backend" aria-pressed="false">Backend</button>
+        <button class="filter-chip" data-filter="cloud" aria-pressed="false">Cloud</button>
+        <button class="filter-chip" data-filter="ai" aria-pressed="false">AI</button>
+        <button class="filter-chip" data-filter="research" aria-pressed="false">Research</button>
+      </div>
+      <span class="filter-counter"><b id="visibleCount">0</b> / <span id="totalCount">0</span></span>
+    </div>
+  </div>
+
+  <!-- ─────────── SKILLS GRID ─────────── -->
+  <section class="skills-section">
+
+    <div class="grid-group" data-group="design">
+      <div class="group-title">— A · <b>Design &amp; Prototyping</b></div>
+      <div class="skill-grid">
+
+        <button class="skill-tile" data-cats="design" data-years="4">
+          <div class="tile-head"><span class="tile-name">Figma</span><span class="tile-years">4y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Design</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Primary tool for every mockup, user flow, and component-library spec across BroadAxis and the Kshan Tech internship. Lived in component variants and auto-layout.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a> · <a href="index.html#work">Kshan Tech</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="design" data-years="4">
+          <div class="tile-head"><span class="tile-name">Adobe Photoshop</span><span class="tile-years">4y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Design</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Hero imagery, retouching, and brand-asset prep for BroadAxis client sites. Used alongside AI generation tools to get production-ready pixels fast.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="design" data-years="3">
+          <div class="tile-head"><span class="tile-name">Adobe Illustrator</span><span class="tile-years">3y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Design</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Logo work, icon sets, and SVG export pipelines for component libraries and marketing pages.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="design ai" data-years="1">
+          <div class="tile-head"><span class="tile-name">Adobe Firefly</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Design</span><span class="tile-cat">AI</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Production AI image generation as part of a content pipeline — cut external design bottlenecks for BroadAxis e-commerce sites.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="design ai" data-years="1">
+          <div class="tile-head"><span class="tile-name">Midjourney</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Design</span><span class="tile-cat">AI</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Concept art and on-brand hero generation. Tuned prompts to maintain visual consistency across a 60K-product catalog.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="design" data-years="3">
+          <div class="tile-head"><span class="tile-name">Design Systems</span><span class="tile-years">3y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Design</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Built and maintained a reusable component library at BroadAxis to standardize UI patterns across 20+ production sites.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="design" data-years="4">
+          <div class="tile-head"><span class="tile-name">Wireframing &amp; Prototyping</span><span class="tile-years">4y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Design</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">From low-fi sketches to high-fidelity clickable prototypes — every BroadAxis project starts here. Comfortable with usability testing loops too.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a> · <a href="index.html#work">Kshan Tech</a></div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="grid-group" data-group="frontend">
+      <div class="group-title">— B · <b>Front-End Development</b></div>
+      <div class="skill-grid">
+
+        <button class="skill-tile" data-cats="frontend" data-years="5">
+          <div class="tile-head"><span class="tile-name">HTML5</span><span class="tile-years">5y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Semantic, accessible markup as the baseline for every project. This site is hand-written HTML.</div>
+            <div class="tile-where">Where: <a href="projects.html">Projects</a> · <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend" data-years="5">
+          <div class="tile-head"><span class="tile-name">CSS3</span><span class="tile-years">5y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Custom properties, grid, container queries, and motion via GSAP. The dark-luxury aesthetic on this site is hand-tuned CSS, not a framework.</div>
+            <div class="tile-where">Where: <a href="projects.html">Projects</a> · <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend" data-years="4">
+          <div class="tile-head"><span class="tile-name">JavaScript</span><span class="tile-years">4y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Vanilla JS for animation orchestration (GSAP, Lenis), interactive UI, and lightweight chat widgets. No framework when none is needed.</div>
+            <div class="tile-where">Where: <a href="projects.html">Projects</a> · this site</div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend" data-years="3">
+          <div class="tile-head"><span class="tile-name">Bootstrap</span><span class="tile-years">3y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Production responsive grids on BroadAxis client sites. Customized Sass variables to match brand systems.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend backend" data-years="2">
+          <div class="tile-head"><span class="tile-name">WordPress</span><span class="tile-years">2y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Primary CMS at BroadAxis. Built custom plugins, page templates, and a YMM (Year/Make/Model) mapping system for a 60K-product catalog.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend" data-years="2">
+          <div class="tile-head"><span class="tile-name">Elementor</span><span class="tile-years">2y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Page builder for client-facing sites at BroadAxis. Custom widgets and template overrides where stock blocks weren't enough.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend" data-years="1">
+          <div class="tile-head"><span class="tile-name">Flutter</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Built responsive web pages, custom icons, login flows, and scroll navigation against client mockups during the Kshan Tech internship.</div>
+            <div class="tile-where">Where: <a href="index.html#work">Kshan Tech</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend" data-years="1">
+          <div class="tile-head"><span class="tile-name">Dart</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Pairs with Flutter — wrote all the widget logic and state for the Kshan Tech internship deliverables.</div>
+            <div class="tile-where">Where: <a href="index.html#work">Kshan Tech</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="frontend" data-years="3">
+          <div class="tile-head"><span class="tile-name">Responsive &amp; Cross-Browser</span><span class="tile-years">3y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Frontend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Tested across Android, Windows, Linux, and the full desktop browser matrix at Kshan Tech and BroadAxis.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a> · <a href="index.html#work">Kshan Tech</a></div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="grid-group" data-group="backend">
+      <div class="group-title">— C · <b>Backend &amp; Languages</b></div>
+      <div class="skill-grid">
+
+        <button class="skill-tile" data-cats="backend" data-years="2">
+          <div class="tile-head"><span class="tile-name">PHP</span><span class="tile-years">2y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Custom WordPress plugin development at BroadAxis — including the 60K-product YMM mapping plugin.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="backend" data-years="4">
+          <div class="tile-head"><span class="tile-name">Python</span><span class="tile-years">4y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Flask app for LSB Steganography, scikit-learn for the customer-spending model, OpenCV/SIFT for keypoint detection.</div>
+            <div class="tile-where">Where: <a href="projects.html">Projects</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="backend" data-years="1">
+          <div class="tile-head"><span class="tile-name">Flask</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Backend for the LSB Steganography app — image upload, encoding pipeline, retrieval flow.</div>
+            <div class="tile-where">Where: <a href="projects.html">Steganography app</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="backend" data-years="3">
+          <div class="tile-head"><span class="tile-name">Java</span><span class="tile-years">3y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">UTA coursework + the Spring Boot logging framework at Viridium AI.</div>
+            <div class="tile-where">Where: <a href="index.html#work">Viridium AI</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="backend" data-years="1">
+          <div class="tile-head"><span class="tile-name">Spring Boot</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Built a logging &amp; monitoring framework for site incidents at Viridium AI using SLF4J and LOG4J.</div>
+            <div class="tile-where">Where: <a href="index.html#work">Viridium AI</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="backend" data-years="3">
+          <div class="tile-head"><span class="tile-name">MySQL</span><span class="tile-years">3y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Catalog data modeling at BroadAxis (60K+ products, YMM mapping); relational backing store for Spring Boot work at Viridium.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a> · <a href="index.html#work">Viridium AI</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="backend" data-years="3">
+          <div class="tile-head"><span class="tile-name">C</span><span class="tile-years">3y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Backend</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">UTA systems coursework — pointers, memory layout, and low-level work that informs how I think about performance everywhere else.</div>
+            <div class="tile-where">Where: UTA coursework</div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="grid-group" data-group="cloud">
+      <div class="group-title">— D · <b>Cloud, DevOps &amp; Tools</b></div>
+      <div class="skill-grid">
+
+        <button class="skill-tile" data-cats="cloud" data-years="1">
+          <div class="tile-head"><span class="tile-name">Azure</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Cloud</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Data Factory pipelines at Viridium AI; familiar with Azure DevOps, Kubernetes, Monitor, and VMs from research and coursework.</div>
+            <div class="tile-where">Where: <a href="index.html#work">Viridium AI</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="cloud" data-years="1">
+          <div class="tile-head"><span class="tile-name">GCP &amp; Firestore</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Cloud</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Hosted the LSB Steganography app on GCP with Firestore for metadata persistence.</div>
+            <div class="tile-where">Where: <a href="projects.html">Steganography app</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="cloud" data-years="4">
+          <div class="tile-head"><span class="tile-name">Git</span><span class="tile-years">4y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Cloud</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Daily driver across every job and side project — comfortable with rebasing, hunk staging, and clean history.</div>
+            <div class="tile-where">Where: every project</div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="cloud" data-years="2">
+          <div class="tile-head"><span class="tile-name">Postman</span><span class="tile-years">2y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Cloud</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">API exploration, request collections, and integration testing for backend work.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a> · <a href="index.html#work">Viridium AI</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="cloud" data-years="1">
+          <div class="tile-head"><span class="tile-name">Microsoft CRM</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Cloud</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Configured CRM integrations and automations for client deployments at BroadAxis.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="grid-group" data-group="ai">
+      <div class="group-title">— E · <b>AI &amp; ML</b></div>
+      <div class="skill-grid">
+
+        <button class="skill-tile" data-cats="ai" data-years="1">
+          <div class="tile-head"><span class="tile-name">Claude Code</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">AI</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Daily pair-programming partner for refactors, multi-file edits, and design exploration. Building agent layers on top of Claude is the next chapter of this site.</div>
+            <div class="tile-where">Where: this site · personal projects</div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="ai research" data-years="1">
+          <div class="tile-head"><span class="tile-name">scikit-learn</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">AI</span><span class="tile-cat">Research</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Random forest and linear regression for the customer-spending prediction model; environmental ML at Viridium AI.</div>
+            <div class="tile-where">Where: <a href="projects.html">Projects</a> · <a href="index.html#work">Viridium AI</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="ai research" data-years="1">
+          <div class="tile-head"><span class="tile-name">OpenCV / SIFT</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">AI</span><span class="tile-cat">Research</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Keypoint detection on CIFAR-10 — feature matching with SIFT and RANSAC, exploring the descriptor-robustness vs. compute trade-off.</div>
+            <div class="tile-where">Where: <a href="projects.html">Keypoint Detection</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="ai design" data-years="1">
+          <div class="tile-head"><span class="tile-name">Google Flow</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">AI</span><span class="tile-cat">Design</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">AI-assisted creative pipeline integration alongside Firefly and Midjourney at BroadAxis.</div>
+            <div class="tile-where">Where: <a href="index.html#work">BroadAxis</a></div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="grid-group" data-group="research">
+      <div class="group-title">— F · <b>Research &amp; Academic Tools</b></div>
+      <div class="skill-grid">
+
+        <button class="skill-tile" data-cats="research" data-years="1">
+          <div class="tile-head"><span class="tile-name">Cybersecurity Research</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Research</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Curriculum testing, content for student orgs, and a published AI/ML cybersecurity paper under Dr. Nadra Guizani at UTA.</div>
+            <div class="tile-where">Where: <a href="index.html#work">UTA Research</a></div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="research" data-years="1">
+          <div class="tile-head"><span class="tile-name">MATLAB</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Research</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">UTA numerical-methods coursework and signal-processing experiments.</div>
+            <div class="tile-where">Where: UTA coursework</div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="research" data-years="1">
+          <div class="tile-head"><span class="tile-name">R</span><span class="tile-years">1y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Research</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Statistical analysis and visualization in coursework — lm/glm, ggplot, EDA workflows.</div>
+            <div class="tile-where">Where: UTA coursework</div>
+          </div>
+        </button>
+
+        <button class="skill-tile" data-cats="research" data-years="2">
+          <div class="tile-head"><span class="tile-name">LaTeX</span><span class="tile-years">2y</span></div>
+          <div class="tile-cats"><span class="tile-cat">Research</span></div>
+          <div class="tile-body">
+            <div class="tile-proof">Research papers, lab reports, and the cybersecurity paper submission stack.</div>
+            <div class="tile-where">Where: <a href="index.html#work">UTA Research</a></div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      No skills match this filter — yet.
+    </div>
+  </section>
+</div>
+
+<!-- ─────────── CTA STRIP ─────────── -->
+<section class="cta-strip">
+  <div class="container">
+    <h2>See where these <em>actually shipped</em>.</h2>
+    <div class="cta-strip-actions">
+      <a class="cta-btn is-primary" href="projects.html">View projects →</a>
+      <a class="cta-btn" href="contact.html">Let's talk</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <footer>
+    <div>© <span data-year>2026</span> Aryan Mainkar</div>
+    <div>Designed &amp; built with care · Arlington, TX</div>
+    <div><span class="gold-dot"></span>v2.1 — Skills</div>
+  </footer>
+</div>
+
+<script>
+/* skills.html — filter logic + reveal stagger */
+(function () {
+  const tiles = Array.from(document.querySelectorAll('.skill-tile'));
+  const groups = Array.from(document.querySelectorAll('.grid-group'));
+  const chips = Array.from(document.querySelectorAll('.filter-chip'));
+  const empty = document.getElementById('emptyState');
+  const visibleCount = document.getElementById('visibleCount');
+  const totalCount = document.getElementById('totalCount');
+
+  totalCount.textContent = tiles.length;
+
+  function applyFilter(filter) {
+    let visible = 0;
+    tiles.forEach((tile) => {
+      const cats = (tile.dataset.cats || '').split(/\s+/);
+      const match = filter === 'all' || cats.includes(filter);
+      tile.classList.toggle('is-hidden', !match);
+      if (match) visible++;
+    });
+    groups.forEach((g) => {
+      const has = g.querySelectorAll('.skill-tile:not(.is-hidden)').length > 0;
+      g.style.display = has ? '' : 'none';
+    });
+    empty.classList.toggle('is-shown', visible === 0);
+    visibleCount.textContent = visible;
+
+    if (window.gsap) {
+      gsap.fromTo(
+        '.skill-tile:not(.is-hidden)',
+        { y: 14, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.025, ease: 'expo.out', overwrite: true }
+      );
+    }
+  }
+  applyFilter('all');
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => { c.classList.remove('is-active'); c.setAttribute('aria-pressed', 'false'); });
+      chip.classList.add('is-active');
+      chip.setAttribute('aria-pressed', 'true');
+      applyFilter(chip.dataset.filter);
+    });
+  });
+
+  tiles.forEach((tile) => {
+    tile.addEventListener('click', () => {
+      const isOpen = tile.classList.toggle('is-open');
+      tile.setAttribute('aria-expanded', isOpen);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

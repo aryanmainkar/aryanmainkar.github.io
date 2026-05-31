@@ -13,258 +13,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
 <script>
-  /* Pre-paint flag: marks the document as JS-animation-capable so the CSS can hide split-text & .reveal start states.
-     Stripped later if libs fail or if reduced motion is on, so content is never permanently invisible. */
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.classList.add('js-anim');
   }
 </script>
 
+<link rel="stylesheet" href="assets/css/shared.css">
+
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="assets/js/shared.js" defer></script>
 <script src="assets/js/chat-widget.js" defer></script>
 
 <style>
-  :root {
-    --bg:          #0a0a0a;
-    --bg-elev:     #141414;
-    --bg-elev-2:   #1c1c1c;
-    --ink:         #f5f5f5;
-    --ink-soft:    #a3a3a3;
-    --ink-mute:    #6b6b6b;
-    --accent:      #39FF14;          /* full neon — CTA / highlight only */
-    --accent-soft: #9fe8a0;          /* desaturated neon — body links, dots */
-    --accent-hot:  #5cff3e;
-    --accent-glow: rgba(57, 255, 20, 0.28);
-    --rule:        rgba(255, 255, 255, 0.10);
-    --rule-strong: rgba(255, 255, 255, 0.22);
-    --green:       #9fe8a0;          /* legacy alias → accent-soft */
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { background: var(--bg); }
-  html { scroll-behavior: auto; }
-  ::selection { background: var(--accent); color: var(--bg); }
-
-  body {
-    color: var(--ink);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    font-size: 14.5px;
-    line-height: 1.65;
-    overflow-x: hidden;
-    position: relative;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-
-  .mono {
-    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-    font-feature-settings: 'tnum' 1, 'zero' 1;
-  }
-
-  /* ─────────── ambient noise ─────────── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.5;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.94 0 0 0 0 0.85 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
-  }
-
-  /* ─────────── glow orbs ─────────── */
-  .orbs {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.25;
-    will-change: transform;
-    transition: opacity 1.2s ease;
-  }
-  .orb-1 {
-    width: 720px; height: 720px;
-    top: -160px; left: -180px;
-    background: radial-gradient(circle, rgba(57,255,20,0.32), rgba(57,255,20,0) 70%);
-  }
-  .orb-2 {
-    width: 640px; height: 640px;
-    top: 240vh; right: -200px;
-    background: radial-gradient(circle, rgba(57,255,20,0.22), rgba(57,255,20,0) 70%);
-  }
-  .orb-3 {
-    width: 880px; height: 880px;
-    bottom: -260px; left: 50%;
-    transform: translateX(-50%);
-    background: radial-gradient(circle, rgba(57,255,20,0.28), rgba(57,255,20,0) 70%);
-  }
-
-  /* ─────────── custom cursor ─────────── */
-  .cursor-ring, .cursor-dot {
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: difference;
-    will-change: transform;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-  .cursor-ring {
-    width: 36px; height: 36px;
-    border: 1px solid var(--ink);
-    border-radius: 50%;
-    transform: translate3d(-50%, -50%, 0);
-    transition: width 0.35s cubic-bezier(0.65,0,0.35,1), height 0.35s cubic-bezier(0.65,0,0.35,1), background 0.3s ease, border-color 0.3s ease, opacity 0.4s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: transparent;
-  }
-  .cursor-dot {
-    width: 5px; height: 5px;
-    background: var(--ink);
-    border-radius: 50%;
-    transform: translate3d(-50%, -50%, 0);
-  }
-  body.cursor-ready { cursor: none; }
-  body.cursor-ready a, body.cursor-ready button, body.cursor-ready .skill-tag, body.cursor-ready .project-card { cursor: none; }
-  body.cursor-ready .cursor-ring, body.cursor-ready .cursor-dot { opacity: 1; }
-  body.cursor-link .cursor-ring { width: 60px; height: 60px; background: rgba(57,255,20,0.12); border-color: var(--accent); }
-  body.cursor-link .cursor-dot { opacity: 0; }
-  body.cursor-view .cursor-ring {
-    width: 110px; height: 44px; border-radius: 100px;
-    background: var(--accent); border-color: var(--accent); color: var(--bg);
-    mix-blend-mode: normal;
-  }
-  body.cursor-view .cursor-ring::after { content: 'View →'; }
-  body.cursor-view .cursor-dot { opacity: 0; }
-
-  @media (hover: none) {
-    .cursor-ring, .cursor-dot { display: none !important; }
-  }
-
-  /* ─────────── scroll progress ─────────── */
-  .scroll-progress {
-    position: fixed;
-    top: 0; right: 0;
-    width: 2px;
-    height: 0;
-    background: linear-gradient(to bottom, var(--accent-hot), var(--accent));
-    z-index: 200;
-    pointer-events: none;
-    box-shadow: 0 0 12px var(--accent-glow);
-  }
-
-  .container {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 0 48px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ─────────── NAV ─────────── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    padding: 22px 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
-    background: rgba(10, 9, 8, 0.55);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border-bottom: 1px solid var(--rule);
-  }
-  .nav-logo {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--ink);
-  }
-  .nav-logo .dot {
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 12px var(--accent-glow);
-  }
-  .nav-logo em {
-    font-style: italic;
-    font-weight: 300;
-    color: var(--ink-soft);
-  }
-  .nav-links {
-    display: flex;
-    gap: 28px;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-  }
-  .nav-links a {
-    color: var(--ink-soft);
-    text-decoration: none;
-    position: relative;
-    padding: 4px 2px;
-    transition: color 0.4s ease;
-  }
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.5s cubic-bezier(0.65,0,0.35,1);
-  }
-  .nav-links a:hover { color: var(--ink); }
-  .nav-links a:hover::after,
-  .nav-links a.is-active::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-  .nav-links a.is-active { color: var(--accent); }
-  .nav-counter {
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    color: var(--ink-mute);
-  }
-  .nav-cta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    padding: 9px 18px;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    border-radius: 100px;
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: background 0.25s ease, color 0.25s ease;
-  }
-  .nav-cta:hover { background: var(--accent); color: var(--bg); }
-  @media (max-width: 800px) {
-    .nav-cta { padding: 7px 14px; font-size: 11px; }
-  }
-
   /* ─────────── HERO ─────────── */
   .hero {
     min-height: 100vh;
@@ -274,7 +36,6 @@
     padding: 160px 0 80px;
     position: relative;
   }
-
   .hero-meta {
     display: flex;
     justify-content: space-between;
@@ -287,26 +48,6 @@
     padding-bottom: 18px;
     border-bottom: 1px solid var(--rule);
   }
-  .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--ink);
-  }
-  .status-pill::before {
-    content: '';
-    width: 8px; height: 8px;
-    background: var(--green);
-    border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.7);
-    animation: pulse 2.4s infinite;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.55); }
-    70%  { box-shadow: 0 0 0 9px rgba(57, 255, 20, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
-  }
-
   h1.hero-name {
     font-family: 'Fraunces', serif;
     font-size: clamp(72px, 15vw, 240px);
@@ -321,24 +62,6 @@
     font-weight: 300;
     color: var(--accent);
   }
-
-  /* split text utilities — visible by default; JS hides them only when GSAP is ready to animate. */
-  .char-mask, .word-mask {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: top;
-    line-height: 1;
-    padding-bottom: 0.2em;
-    margin-bottom: -0.16em;
-  }
-  .char, .word {
-    display: inline-block;
-    will-change: transform, opacity;
-  }
-  /* Once JS is in control, hide chars/words via opacity (no transform-property conflict with GSAP). */
-  html.js-anim .char,
-  html.js-anim .word { opacity: 0; }
-
   .hero-tagline {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
@@ -368,7 +91,6 @@
     justify-self: end;
     font-weight: 400;
   }
-
   .hero-cta {
     display: flex;
     align-items: center;
@@ -416,7 +138,6 @@
     white-space: nowrap;
   }
   .hero-cta-btn:hover { background: var(--accent); color: var(--bg); }
-
   .hero-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -434,10 +155,7 @@
     margin-bottom: 10px;
     letter-spacing: -0.02em;
   }
-  .stat-num em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  .stat-num em { font-style: italic; color: var(--accent); }
   .stat-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -445,7 +163,6 @@
     letter-spacing: 0.18em;
     color: var(--ink-mute);
   }
-
   .hero-scroll-cue {
     position: absolute;
     bottom: 40px;
@@ -475,75 +192,6 @@
     100% { transform: translateY(12px); opacity: 0; }
   }
 
-  /* ─────────── SECTIONS ─────────── */
-  .section {
-    padding: 140px 0;
-    border-top: 1px solid var(--rule);
-    position: relative;
-  }
-  .section-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    text-transform: uppercase;
-    letter-spacing: 0.24em;
-    margin-bottom: 64px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    color: var(--ink-soft);
-  }
-  .section-label .num {
-    color: var(--accent);
-    font-weight: 500;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--rule);
-  }
-
-  /* ─────────── MARQUEE ─────────── */
-  .marquee {
-    overflow: hidden;
-    padding: 38px 0;
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    position: relative;
-  }
-  .marquee-track {
-    display: inline-flex;
-    gap: 64px;
-    white-space: nowrap;
-    will-change: transform;
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 300;
-    font-size: clamp(48px, 8.5vw, 132px);
-    line-height: 1;
-    letter-spacing: -0.025em;
-    color: var(--ink);
-  }
-  .marquee-track > span {
-    padding-right: 64px;
-    display: inline-flex;
-    align-items: center;
-    gap: 64px;
-  }
-  .marquee-track .dot {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 24px var(--accent-glow);
-    flex-shrink: 0;
-  }
-  .marquee.outline .marquee-track {
-    color: transparent;
-    -webkit-text-stroke: 1px var(--accent);
-    text-stroke: 1px var(--accent);
-  }
-  .marquee.outline .marquee-track .dot { background: var(--ink); box-shadow: none; }
-
   /* ─────────── ABOUT ─────────── */
   .about-grid {
     display: grid;
@@ -559,10 +207,7 @@
     letter-spacing: -0.018em;
     color: var(--ink);
   }
-  .about-statement em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  .about-statement em { font-style: italic; color: var(--accent); }
   .about-statement .strike {
     text-decoration-line: line-through;
     text-decoration-thickness: 2px;
@@ -600,66 +245,10 @@
     color: var(--ink-mute);
     padding-top: 3px;
   }
-  .info-value {
-    color: var(--ink);
-  }
-
-  /* ─────────── SKILLS ─────────── */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 56px;
-  }
-  .skill-cat {
-    border-top: 1px solid var(--rule-strong);
-    padding-top: 26px;
-  }
-  .skill-cat-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--accent);
-    margin-bottom: 14px;
-  }
-  .skill-cat-title {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 32px;
-    margin-bottom: 30px;
-    font-weight: 400;
-    line-height: 1.1;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .skill-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .skill-tag {
-    padding: 7px 16px;
-    border: 1px solid var(--rule-strong);
-    border-radius: 100px;
-    font-size: 11.5px;
-    color: var(--ink-soft);
-    background: rgba(255, 255, 255, 0.02);
-    transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-    cursor: default;
-  }
-  .skill-tag:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(57, 255, 20, 0.06);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 24px -8px var(--accent-glow);
-  }
+  .info-value { color: var(--ink); }
 
   /* ─────────── EXPERIENCE ─────────── */
-  .experience-list {
-    display: flex;
-    flex-direction: column;
-  }
+  .experience-list { display: flex; flex-direction: column; }
   .exp-item {
     display: grid;
     grid-template-columns: 130px 1.2fr 1.4fr;
@@ -669,9 +258,7 @@
     position: relative;
     transition: padding 0.5s cubic-bezier(0.65, 0, 0.35, 1);
   }
-  .exp-item:last-child {
-    border-bottom: 1px solid var(--rule);
-  }
+  .exp-item:last-child { border-bottom: 1px solid var(--rule); }
   .exp-item::before {
     content: '';
     position: absolute;
@@ -712,10 +299,7 @@
     color: var(--ink-soft);
   }
   .exp-desc p + p { margin-top: 14px; }
-  .exp-desc strong {
-    color: var(--ink);
-    font-weight: 500;
-  }
+  .exp-desc strong { color: var(--ink); font-weight: 500; }
   .exp-tech {
     margin-top: 22px;
     padding-top: 14px;
@@ -727,168 +311,90 @@
     text-transform: uppercase;
   }
 
-  /* ─────────── PROJECTS / horizontal pin ─────────── */
-  #projects { padding: 140px 0 0; border-top: 1px solid var(--rule); }
-  #projects .section-label { margin-bottom: 64px; }
-
-  .h-pin {
-    position: relative;
-    width: 100%;
-  }
-  .h-pin-stage {
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-  }
-  .h-pin-track {
-    display: flex;
+  /* ─────────── TEASER (skills + projects pointers) ─────────── */
+  .teasers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 32px;
-    padding: 0 48px;
-    will-change: transform;
   }
-  .project-card {
-    flex-shrink: 0;
-    width: clamp(380px, 48vw, 580px);
-    height: min(74vh, 660px);
-    background: var(--bg-elev);
+  .teaser-card {
+    position: relative;
+    padding: 48px 40px;
     border: 1px solid var(--rule);
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
+    background: linear-gradient(160deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
     text-decoration: none;
     color: inherit;
-    position: relative;
     overflow: hidden;
     isolation: isolate;
-    transition: border-color 0.4s ease, transform 0.5s cubic-bezier(0.65,0,0.35,1);
+    transition: border-color 0.45s ease, transform 0.5s cubic-bezier(0.65,0,0.35,1);
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
-  .project-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-6px);
-  }
-  .project-cover {
-    position: relative;
-    flex: 1 1 auto;
-    margin: -40px -40px 32px;
-    overflow: hidden;
-    border-bottom: 1px solid var(--rule);
-  }
-  .project-mesh {
-    position: absolute;
-    inset: -10%;
-    filter: blur(40px) saturate(140%);
-    opacity: 0.95;
-    transition: transform 1.2s cubic-bezier(0.65,0,0.35,1), filter 0.8s ease;
-  }
-  .project-card:hover .project-mesh {
-    transform: scale(1.08) rotate(2deg);
-    filter: blur(34px) saturate(160%);
-  }
-  .project-cover::after {
+  .teaser-card::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, transparent 60%, var(--bg-elev) 100%);
-    pointer-events: none;
-  }
-  .project-mesh-1 {
+    inset: -40%;
     background:
-      radial-gradient(circle at 20% 30%, #5fb1c5 0%, transparent 45%),
-      radial-gradient(circle at 75% 70%, #39FF14 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, #1a2730 0%, transparent 60%),
-      #0a1218;
+      radial-gradient(circle at 30% 20%, rgba(57,255,20,0.10), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(95,255,62,0.05), transparent 55%);
+    z-index: -1;
+    transition: transform 0.9s ease;
   }
-  .project-mesh-2 {
-    background:
-      radial-gradient(circle at 30% 70%, #c5587c 0%, transparent 45%),
-      radial-gradient(circle at 80% 25%, #39FF14 0%, transparent 45%),
-      radial-gradient(circle at 55% 50%, #2a1b25 0%, transparent 60%),
-      #14090f;
-  }
-  .project-mesh-3 {
-    background:
-      radial-gradient(circle at 25% 35%, #6b9b5c 0%, transparent 45%),
-      radial-gradient(circle at 75% 75%, #5cff3e 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, #1f2a1a 0%, transparent 60%),
-      #0c130a;
-  }
-  .project-mesh-4 {
-    background:
-      radial-gradient(circle at 50% 50%, #5cff3e 0%, transparent 50%),
-      radial-gradient(circle at 20% 80%, #2a4a30 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, #39FF14 0%, transparent 50%),
-      #0e1410;
-  }
-
-  .project-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 22px;
+  .teaser-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .teaser-card:hover::after { transform: rotate(8deg) scale(1.05); }
+  .teaser-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.14em;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
     text-transform: uppercase;
   }
-  .project-num { color: var(--accent); font-weight: 500; }
-  .project-meta { color: var(--ink-mute); }
-  .project-title {
+  .teaser-title {
     font-family: 'Fraunces', serif;
-    font-size: 34px;
+    font-size: clamp(36px, 4vw, 56px);
     font-weight: 400;
-    line-height: 1.1;
-    margin-bottom: 18px;
-    letter-spacing: -0.015em;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 24px 0 18px;
     color: var(--ink);
   }
-  .project-title em { font-style: italic; color: var(--accent); }
-  .project-desc {
+  .teaser-title em { font-style: italic; color: var(--accent); }
+  .teaser-desc {
     font-size: 13.5px;
     line-height: 1.7;
     color: var(--ink-soft);
-    margin-bottom: 28px;
+    max-width: 440px;
   }
-  .project-tech-label {
+  .teaser-cta {
+    margin-top: 32px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
+    font-size: 11px;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--ink-mute);
-    margin-bottom: 8px;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: gap 0.3s ease;
   }
-  .project-tech-list {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    padding-top: 12px;
-    border-top: 1px dashed var(--rule);
-    color: var(--ink-soft);
-  }
-  .h-pin-rail {
-    margin-top: 24px;
-    height: 1px;
-    background: var(--rule);
-    position: relative;
-    overflow: hidden;
-  }
-  .h-pin-rail::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    width: var(--rail, 0%);
-    background: linear-gradient(to right, var(--accent-hot), var(--accent));
-    box-shadow: 0 0 12px var(--accent-glow);
-    transition: width 0.1s linear;
-  }
-  .h-pin-hint {
-    margin-top: 14px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
+  .teaser-card:hover .teaser-cta { gap: 16px; }
+  .teaser-tags {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .teaser-tags span {
+    padding: 4px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 100px;
   }
 
   /* ─────────── EDUCATION ─────────── */
@@ -910,11 +416,7 @@
     color: var(--ink);
   }
   .edu-school em { font-style: italic; color: var(--accent); }
-  .edu-degree {
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin-top: 10px;
-  }
+  .edu-degree { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
   .edu-honor {
     font-style: italic;
     color: var(--accent);
@@ -954,10 +456,7 @@
     letter-spacing: -0.035em;
     color: var(--ink);
   }
-  .contact-headline em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  .contact-headline em { font-style: italic; color: var(--accent); }
   .contact-email {
     display: inline-block;
     font-family: 'Fraunces', serif;
@@ -970,11 +469,7 @@
     transition: color 0.3s ease, border-width 0.3s ease;
     will-change: transform;
   }
-  .contact-email:hover {
-    color: var(--accent);
-    border-bottom-width: 4px;
-  }
-
+  .contact-email:hover { color: var(--accent); border-bottom-width: 4px; }
   .contact-links {
     margin-top: 80px;
     display: flex;
@@ -995,110 +490,24 @@
     align-items: center;
     gap: 6px;
   }
-  .contact-links a:hover {
-    border-bottom-color: var(--accent);
-    color: var(--accent);
-  }
+  .contact-links a:hover { border-bottom-color: var(--accent); color: var(--accent); }
 
-  /* ─────────── FOOTER ─────────── */
-  footer {
-    border-top: 1px solid var(--rule);
-    padding: 36px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    gap: 16px;
-  }
-  footer .gold-dot {
-    display: inline-block;
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    margin-right: 10px;
-    vertical-align: middle;
-  }
-
-  /* ─────────── REVEAL ─────────── */
-  /* Visible by default. Hidden start state activates only once JS has confirmed it can animate them in. */
-  html.js-anim .reveal {
-    opacity: 0;
-    transform: translateY(36px);
-  }
-  html.js-anim .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 1s ease, transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
-  }
-  html.js-anim .reveal-delay-1.visible { transition-delay: 0.1s; }
-  html.js-anim .reveal-delay-2.visible { transition-delay: 0.2s; }
-  html.js-anim .reveal-delay-3.visible { transition-delay: 0.3s; }
-
-  /* ─────────── focus ─────────── */
-  a:focus-visible, button:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 4px;
-    border-radius: 2px;
-  }
-
-  /* ─────────── MOBILE ─────────── */
+  /* ─────────── PAGE-SPECIFIC MOBILE ─────────── */
   @media (max-width: 900px) {
-    .container { padding: 0 24px; }
-    nav { padding: 16px 24px; }
-    .nav-links { gap: 18px; font-size: 10px; letter-spacing: 0.16em; }
-    .nav-counter { display: none; }
     .hero-tagline { grid-template-columns: 1fr; gap: 32px; }
     .hero-summary { justify-self: start; max-width: 100%; }
     .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 28px; }
     .stat-num { font-size: 48px; }
     .about-grid { grid-template-columns: 1fr; gap: 56px; }
-    .skills-grid { grid-template-columns: 1fr; gap: 40px; }
     .exp-item { grid-template-columns: 1fr; gap: 20px; padding: 36px 0; }
     .exp-item:hover { padding-left: 0; }
-
-    /* horizontal pin -> vertical stack on mobile */
-    .h-pin { height: auto !important; }
-    .h-pin-stage { height: auto; display: block; }
-    .h-pin-track {
-      flex-direction: column;
-      padding: 0;
-      gap: 24px;
-      transform: none !important;
-    }
-    .project-card { width: 100%; height: auto; min-height: 480px; }
-    .h-pin-rail, .h-pin-hint { display: none; }
-
     .education-row { grid-template-columns: 1fr; gap: 16px; }
     .edu-honor { justify-self: start; }
     .contact-links { flex-direction: column; gap: 20px; }
-    .section { padding: 100px 0; }
     .hero { padding: 130px 0 80px; }
     .hero-scroll-cue { display: none; }
-    footer { flex-direction: column; gap: 14px; text-align: center; }
-    .marquee { padding: 24px 0; }
-  }
-
-  @media (max-width: 480px) {
-    .nav-links { gap: 14px; }
-    .nav-links a:nth-child(2), .nav-links a:nth-child(3) { display: none; }
-  }
-
-  /* ─────────── reduced motion ─────────── */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-    .marquee-track { transform: none !important; }
-    .reveal { opacity: 1; transform: none; }
-    .cursor-ring, .cursor-dot { display: none !important; }
-    body.cursor-ready { cursor: auto; }
-    .hero-scroll-cue { display: none; }
+    .teasers { grid-template-columns: 1fr; gap: 20px; }
+    .teaser-card { padding: 36px 28px; min-height: 260px; }
   }
 </style>
 </head>
@@ -1117,13 +526,13 @@
 
 <!-- ─────────── NAV ─────────── -->
 <nav>
-  <a class="nav-logo" href="#top" aria-label="Aryan Mainkar — top">
+  <a class="nav-logo" href="index.html" aria-label="Aryan Mainkar — top">
     <span class="dot"></span>Aryan <em>Mainkar</em>
   </a>
   <div class="nav-links">
     <a href="#work">Work</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
+    <a href="skills.html">Skills</a>
+    <a href="projects.html">Projects</a>
     <a href="resume.html">Resume</a>
     <a href="contact.html">Contact</a>
   </div>
@@ -1196,7 +605,7 @@
   <section class="section" id="about">
     <div class="section-label"><span class="num">01</span> About</div>
     <div class="about-grid">
-      <div class="about-statement reveal">
+      <div class="about-statement reveal" data-drift>
         I work where <em>design</em> meets <em>engineering</em> — translating mockups and user flows into responsive, accessible interfaces. I care about details: typography that breathes, components that feel right, and code that ships clean.
       </div>
       <div class="about-info reveal reveal-delay-1">
@@ -1224,78 +633,15 @@
     </div>
   </section>
 
-  <!-- ─────────── SKILLS ─────────── -->
-  <section class="section" id="skills">
-    <div class="section-label"><span class="num">02</span> Capabilities</div>
-    <div class="skills-grid">
-      <div class="skill-cat reveal">
-        <div class="skill-cat-num">— A</div>
-        <h3 class="skill-cat-title">Design &amp; Prototyping</h3>
-        <ul class="skill-list">
-          <li class="skill-tag">Figma</li>
-          <li class="skill-tag">Adobe Photoshop</li>
-          <li class="skill-tag">Adobe Illustrator</li>
-          <li class="skill-tag">Adobe Firefly</li>
-          <li class="skill-tag">Midjourney</li>
-          <li class="skill-tag">Google Flow</li>
-          <li class="skill-tag">Wireframing</li>
-          <li class="skill-tag">Prototyping</li>
-          <li class="skill-tag">User Flows</li>
-          <li class="skill-tag">Usability Testing</li>
-          <li class="skill-tag">Design Systems</li>
-          <li class="skill-tag">Component Libraries</li>
-        </ul>
-      </div>
-      <div class="skill-cat reveal reveal-delay-1">
-        <div class="skill-cat-num">— B</div>
-        <h3 class="skill-cat-title">Front-End Development</h3>
-        <ul class="skill-list">
-          <li class="skill-tag">HTML5</li>
-          <li class="skill-tag">CSS3</li>
-          <li class="skill-tag">JavaScript</li>
-          <li class="skill-tag">Bootstrap</li>
-          <li class="skill-tag">WordPress</li>
-          <li class="skill-tag">Elementor</li>
-          <li class="skill-tag">Flutter</li>
-          <li class="skill-tag">Dart</li>
-          <li class="skill-tag">Responsive Design</li>
-          <li class="skill-tag">Cross-Browser Testing</li>
-          <li class="skill-tag">Mobile-First</li>
-        </ul>
-      </div>
-      <div class="skill-cat reveal reveal-delay-2">
-        <div class="skill-cat-num">— C</div>
-        <h3 class="skill-cat-title">Languages, Frameworks &amp; Tools</h3>
-        <ul class="skill-list">
-          <li class="skill-tag">PHP</li>
-          <li class="skill-tag">Python</li>
-          <li class="skill-tag">Flask</li>
-          <li class="skill-tag">Java</li>
-          <li class="skill-tag">Spring Boot</li>
-          <li class="skill-tag">C</li>
-          <li class="skill-tag">MATLAB</li>
-          <li class="skill-tag">R</li>
-          <li class="skill-tag">LaTeX</li>
-          <li class="skill-tag">MySQL</li>
-          <li class="skill-tag">Git</li>
-          <li class="skill-tag">Postman</li>
-          <li class="skill-tag">Claude Code</li>
-          <li class="skill-tag">Microsoft CRM</li>
-          <li class="skill-tag">Azure</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
   <!-- ─────────── EXPERIENCE ─────────── -->
   <section class="section" id="work">
-    <div class="section-label"><span class="num">03</span> Selected Work</div>
+    <div class="section-label"><span class="num">02</span> Selected Work</div>
     <div class="experience-list">
 
       <div class="exp-item reveal">
         <div class="exp-date">Feb 2026<br>— Present</div>
         <div>
-          <h3 class="exp-title">Full Stack Developer</h3>
+          <h3 class="exp-title" data-drift>Full Stack Developer</h3>
           <div class="exp-company">BroadAxis Inc</div>
         </div>
         <div class="exp-desc">
@@ -1309,7 +655,7 @@
       <div class="exp-item reveal">
         <div class="exp-date">Mar 2025<br>— Dec 2025</div>
         <div>
-          <h3 class="exp-title">Cybersecurity Research Volunteer</h3>
+          <h3 class="exp-title" data-drift>Cybersecurity Research Volunteer</h3>
           <div class="exp-company">University of Texas at Arlington</div>
         </div>
         <div class="exp-desc">
@@ -1321,7 +667,7 @@
       <div class="exp-item reveal">
         <div class="exp-date">May 2024<br>— Aug 2024</div>
         <div>
-          <h3 class="exp-title">Flutter Developer Intern</h3>
+          <h3 class="exp-title" data-drift>Flutter Developer Intern</h3>
           <div class="exp-company">Kshan Tech Soft Pvt Ltd · Pune, India</div>
         </div>
         <div class="exp-desc">
@@ -1334,7 +680,7 @@
       <div class="exp-item reveal">
         <div class="exp-date">May 2023<br>— Aug 2023</div>
         <div>
-          <h3 class="exp-title">Software Developer Intern</h3>
+          <h3 class="exp-title" data-drift>Software Developer Intern</h3>
           <div class="exp-company">Viridium AI · Seattle, WA</div>
         </div>
         <div class="exp-desc">
@@ -1347,6 +693,36 @@
 
     </div>
   </section>
+
+  <!-- ─────────── TEASERS — Skills + Projects ─────────── -->
+  <section class="section" id="explore">
+    <div class="section-label"><span class="num">03</span> Explore</div>
+    <div class="teasers">
+      <a class="teaser-card reveal" href="skills.html">
+        <div>
+          <div class="teaser-num">— A · Skills</div>
+          <h3 class="teaser-title">Tools that <em>I actually ship with</em>.</h3>
+          <p class="teaser-desc">Filterable matrix of every framework, language, and design tool I've used in production — each with years of experience and where it was used.</p>
+          <div class="teaser-tags">
+            <span>Figma</span><span>WordPress</span><span>Flutter</span><span>Spring Boot</span><span>Azure</span><span>+ more</span>
+          </div>
+        </div>
+        <div class="teaser-cta">View all skills →</div>
+      </a>
+
+      <a class="teaser-card reveal reveal-delay-1" href="projects.html">
+        <div>
+          <div class="teaser-num">— B · Projects</div>
+          <h3 class="teaser-title">Case studies <em>with the receipts</em>.</h3>
+          <p class="teaser-desc">Five projects told as Problem → Approach → Outcome — production work and research, with code, metrics, and a chat agent for each one.</p>
+          <div class="teaser-tags">
+            <span>Full-stack</span><span>Cybersecurity</span><span>Flutter</span><span>ML / AI</span><span>Azure</span>
+          </div>
+        </div>
+        <div class="teaser-cta">View all projects →</div>
+      </a>
+    </div>
+  </section>
 </div>
 
 <!-- ─────────── MARQUEE B ─────────── -->
@@ -1357,86 +733,15 @@
   </div>
 </div>
 
-<!-- ─────────── PROJECTS / pinned horizontal ─────────── -->
-<section id="projects">
-  <div class="container">
-    <div class="section-label"><span class="num">04</span> Projects</div>
-  </div>
-
-  <div class="h-pin">
-    <div class="h-pin-stage">
-      <div class="h-pin-track">
-
-        <a class="project-card" href="https://github.com/aryanmainkar/Steganography-Website" target="_blank" rel="noopener">
-          <div class="project-cover"><div class="project-mesh project-mesh-1"></div></div>
-          <div class="project-head">
-            <span class="project-num">№ 01</span>
-            <span class="project-meta">Jan — May 2024</span>
-          </div>
-          <h3 class="project-title">LSB Steganography <em>Application</em></h3>
-          <p class="project-desc">Full-stack web app with a clean, responsive UI for hiding and retrieving messages inside images. Designed the upload/preview flow and built the encoding pipeline end-to-end.</p>
-          <div class="project-tech-label">Stack</div>
-          <div class="project-tech-list">Flask · Python · GCP · Firestore</div>
-        </a>
-
-        <a class="project-card" href="https://github.com/aryanmainkar/Matching-and-Image-stitching-with-SIFT-and-RANSAC." target="_blank" rel="noopener">
-          <div class="project-cover"><div class="project-mesh project-mesh-2"></div></div>
-          <div class="project-head">
-            <span class="project-num">№ 02</span>
-            <span class="project-meta">Jan — May 2024</span>
-          </div>
-          <h3 class="project-title">Keypoint Detection <em>HOG &amp; SIFT</em></h3>
-          <p class="project-desc">Computer vision project applying SIFT and RANSAC for feature matching across the CIFAR-10 dataset. Explored the trade-offs between descriptor robustness and computational cost.</p>
-          <div class="project-tech-label">Stack</div>
-          <div class="project-tech-list">Python · Jupyter · OpenCV · NumPy</div>
-        </a>
-
-        <a class="project-card" href="https://github.com/aryanmainkar/Customer-Sales-Data-Analysis" target="_blank" rel="noopener">
-          <div class="project-cover"><div class="project-mesh project-mesh-3"></div></div>
-          <div class="project-head">
-            <span class="project-num">№ 03</span>
-            <span class="project-meta">Aug — Dec 2023</span>
-          </div>
-          <h3 class="project-title">Customer Spending <em>Prediction Model</em></h3>
-          <p class="project-desc">Random forest model built with Python and scikit-learn to predict customer spending from demographic and payment data. Focused on feature engineering and model interpretability.</p>
-          <div class="project-tech-label">Stack</div>
-          <div class="project-tech-list">Python · scikit-learn · pandas</div>
-        </a>
-
-        <a class="project-card" href="https://github.com/aryanmainkar" target="_blank" rel="noopener">
-          <div class="project-cover"><div class="project-mesh project-mesh-4"></div></div>
-          <div class="project-head">
-            <span class="project-num">№ 04</span>
-            <span class="project-meta">More on GitHub →</span>
-          </div>
-          <h3 class="project-title"><em>Open Source</em> &amp; experiments</h3>
-          <p class="project-desc">Smaller experiments, design explorations, and learning projects. Always tinkering — visit the repository for the full collection of WIPs and one-offs.</p>
-          <div class="project-tech-label">Find me on</div>
-          <div class="project-tech-list">github.com/aryanmainkar</div>
-        </a>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="h-pin-rail" aria-hidden="true"></div>
-    <div class="h-pin-hint">
-      <span>Scroll · ← → keys</span>
-      <span>04 — Projects</span>
-    </div>
-  </div>
-</section>
-
 <div class="container">
 
   <!-- ─────────── EDUCATION ─────────── -->
   <section class="section" id="education">
-    <div class="section-label"><span class="num">05</span> Education</div>
+    <div class="section-label"><span class="num">04</span> Education</div>
     <div class="education-row reveal">
       <div class="exp-date">Aug 2020<br>— Dec 2024</div>
       <div>
-        <h3 class="edu-school">University of Texas at <em>Arlington</em></h3>
+        <h3 class="edu-school" data-drift>University of Texas at <em>Arlington</em></h3>
         <div class="edu-degree">Bachelor of Science in Computer Science · Arlington, TX</div>
       </div>
       <div class="edu-honor">Maverick Academic Scholar</div>
@@ -1460,369 +765,75 @@
 
   <!-- ─────────── FOOTER ─────────── -->
   <footer>
-    <div>© 2026 Aryan Mainkar</div>
+    <div>© <span data-year>2026</span> Aryan Mainkar</div>
     <div>Designed &amp; built with care · Arlington, TX</div>
-    <div><span class="gold-dot"></span>v2.0 — Portfolio</div>
+    <div><span class="gold-dot"></span>v2.1 — Portfolio</div>
   </footer>
 
 </div>
 
 <script>
-(function(){
-  'use strict';
+/* page-specific: hero timeline, exp-item enter marker, contact-headline reveal.
+   Listens for portfolio:ready (libs loaded) — falls through silently otherwise. */
+document.addEventListener('portfolio:ready', () => {
+  const heroChars = document.querySelectorAll('.hero-name .char');
+  const roleWords = document.querySelectorAll('.hero-role .word');
+  const heroMeta = document.querySelector('.hero-meta');
+  const heroSummary = document.querySelector('.hero-summary');
+  const heroStats = document.querySelector('.hero-stats');
+  const scrollCue = document.querySelector('.hero-scroll-cue');
 
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isTouch = matchMedia('(hover: none)').matches;
-  const isMobile = matchMedia('(max-width: 900px)').matches;
+  gsap.set(heroChars, { yPercent: 110, rotate: 6, opacity: 0 });
+  gsap.set(roleWords, { yPercent: 110, opacity: 0 });
+  gsap.set([heroMeta, heroSummary, heroStats, scrollCue], { y: 24, opacity: 0 });
 
-  /* ─── split text helpers ─── */
-  function splitChars(el){
-    const walk = (node) => {
-      const out = document.createDocumentFragment();
-      node.childNodes.forEach(child => {
-        if (child.nodeType === Node.TEXT_NODE) {
-          const text = child.textContent;
-          for (const ch of text) {
-            if (ch === ' ') {
-              out.appendChild(document.createTextNode(' '));
-            } else {
-              const mask = document.createElement('span');
-              mask.className = 'char-mask';
-              const inner = document.createElement('span');
-              inner.className = 'char';
-              inner.textContent = ch;
-              mask.appendChild(inner);
-              out.appendChild(mask);
-            }
-          }
-        } else if (child.nodeType === Node.ELEMENT_NODE) {
-          if (child.tagName === 'BR') {
-            out.appendChild(child.cloneNode(true));
-          } else {
-            const clone = child.cloneNode(false);
-            clone.appendChild(walk(child));
-            out.appendChild(clone);
-          }
-        }
-      });
-      return out;
-    };
-    const fragment = walk(el);
-    el.innerHTML = '';
-    el.appendChild(fragment);
-  }
+  const tl = gsap.timeline({ delay: 0.15, defaults: { ease: 'expo.out' } });
+  tl.to(heroMeta, { y: 0, opacity: 1, duration: 0.9 }, 0)
+    .to(heroChars, { yPercent: 0, rotate: 0, opacity: 1, duration: 1.15, stagger: 0.035 }, 0.15)
+    .to(roleWords, { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.04 }, 0.7)
+    .to(heroSummary, { y: 0, opacity: 1, duration: 0.9 }, 0.85)
+    .to(heroStats, { y: 0, opacity: 1, duration: 0.9 }, 1.0)
+    .to(scrollCue, { y: 0, opacity: 1, duration: 0.7 }, 1.2);
 
-  function splitWords(el){
-    const text = el.innerHTML;
-    const tokens = text.split(/(<[^>]+>|\s+)/).filter(Boolean);
-    let html = '';
-    tokens.forEach(tok => {
-      if (/^<[^>]+>$/.test(tok)) {
-        html += tok;
-      } else if (/^\s+$/.test(tok)) {
-        html += ' ';
-      } else {
-        html += `<span class="word-mask"><span class="word">${tok}</span></span>`;
-      }
-    });
-    el.innerHTML = html;
-  }
-
-  /* run splits early so layout is stable */
-  document.querySelectorAll('[data-split="chars"]').forEach(splitChars);
-  document.querySelectorAll('[data-split="words"]').forEach(splitWords);
-
-  /* ─── fallback (no GSAP): content is already visible by default. No-op. ─── */
-  const fallbackReveal = () => {
-    /* Nothing to do — without `html.js-anim`, .reveal/.char/.word render at their natural state. */
-  };
-
-  /* ─── nav anchor smooth scroll ─── */
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      if (href === '#') return;
-      const target = document.querySelector(href);
-      if (!target) return;
-      e.preventDefault();
-      if (window.lenis) {
-        window.lenis.scrollTo(target, { offset: -20, duration: 1.4 });
-      } else {
-        target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
-      }
+  document.querySelectorAll('.exp-item').forEach((item) => {
+    ScrollTrigger.create({
+      trigger: item,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => item.classList.add('is-in'),
     });
   });
 
-  /* ─── scroll progress bar (works with or without Lenis) ─── */
-  const progress = document.querySelector('.scroll-progress');
-  function updateProgress(){
-    const max = document.documentElement.scrollHeight - innerHeight;
-    const ratio = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
-    progress.style.height = (ratio * 100) + '%';
-  }
-  addEventListener('scroll', updateProgress, { passive: true });
-  addEventListener('resize', updateProgress);
-  updateProgress();
-
-  /* ─── boot once defer scripts have run ─── */
-  function dropJsAnim(){
-    /* If we're not going to animate, strip the pre-paint flag so the CSS hidden states release. */
-    document.documentElement.classList.remove('js-anim');
-  }
-  function tryBoot(){
-    if (typeof gsap !== 'undefined' && typeof Lenis !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-      init();
-    } else {
-      console.warn('[portfolio] GSAP/Lenis missing — leaving content in static (no-animation) state.');
-      dropJsAnim();
-      fallbackReveal();
-    }
-  }
-
-  /* ─── reduced motion: skip libs entirely ─── */
-  if (reduced) {
-    dropJsAnim();
-    fallbackReveal();
-    return;
-  }
-
-  /* Defer scripts execute before DOMContentLoaded, so this is the right hook. */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', tryBoot);
-  } else {
-    tryBoot();
-  }
-
-  function init(){
-    gsap.registerPlugin(ScrollTrigger);
-
-    /* ── Lenis smooth scroll ── */
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      smoothTouch: false
+  const contactWords = document.querySelectorAll('.contact-headline .word');
+  if (contactWords.length) {
+    gsap.set(contactWords, { yPercent: 110, opacity: 0 });
+    gsap.to(contactWords, {
+      yPercent: 0, opacity: 1,
+      duration: 1.0, stagger: 0.05, ease: 'expo.out',
+      scrollTrigger: { trigger: '.contact-headline', start: 'top 85%', once: true },
     });
-    window.lenis = lenis;
+  }
 
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-
-    /* ── Hero reveal timeline ── */
-    const heroChars = document.querySelectorAll('.hero-name .char');
-    const roleWords = document.querySelectorAll('.hero-role .word');
-    const heroMeta = document.querySelector('.hero-meta');
-    const heroSummary = document.querySelector('.hero-summary');
-    const heroStats = document.querySelector('.hero-stats');
-    const scrollCue = document.querySelector('.hero-scroll-cue');
-
-    gsap.set(heroChars, { yPercent: 110, rotate: 6, opacity: 0 });
-    gsap.set(roleWords, { yPercent: 110, opacity: 0 });
-    gsap.set([heroMeta, heroSummary, heroStats, scrollCue], { y: 24, opacity: 0 });
-
-    const tl = gsap.timeline({ delay: 0.15, defaults: { ease: 'expo.out' } });
-    tl.to(heroMeta, { y: 0, opacity: 1, duration: 0.9 }, 0)
-      .to(heroChars, { yPercent: 0, rotate: 0, opacity: 1, duration: 1.15, stagger: 0.035 }, 0.15)
-      .to(roleWords, { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.04 }, 0.7)
-      .to(heroSummary, { y: 0, opacity: 1, duration: 0.9 }, 0.85)
-      .to(heroStats, { y: 0, opacity: 1, duration: 0.9 }, 1.0)
-      .to(scrollCue, { y: 0, opacity: 1, duration: 0.7 }, 1.2);
-
-    /* ── reveal on scroll for .reveal blocks ── */
-    document.querySelectorAll('.reveal').forEach(el => {
-      if (el.closest('.hero')) return;
-      gsap.fromTo(el,
-        { y: 40, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 1.0, ease: 'expo.out',
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+  /* in-page section-aware nav (only for #anchors that exist on this page) */
+  const navLinks = document.querySelectorAll('.nav-links a');
+  navLinks.forEach((link) => {
+    const href = link.getAttribute('href') || '';
+    if (!href.startsWith('#')) return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    ScrollTrigger.create({
+      trigger: target,
+      start: 'top 50%',
+      end: 'bottom 50%',
+      onToggle: (self) => {
+        if (self.isActive) {
+          navLinks.forEach((l) => { if (l.getAttribute('href').startsWith('#')) l.classList.remove('is-active'); });
+          link.classList.add('is-active');
         }
-      );
+      },
     });
-
-    /* ── about statement, exp items, edu, projects label etc. word/char reveal ── */
-    document.querySelectorAll('.about-statement, .exp-title, .skill-cat-title, .edu-school').forEach(el => {
-      gsap.fromTo(el,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 1.1, ease: 'expo.out',
-          scrollTrigger: { trigger: el, start: 'top 92%', once: true }
-        }
-      );
-    });
-
-    /* ── exp item enter marker (used by hover/scroll css) ── */
-    document.querySelectorAll('.exp-item').forEach(item => {
-      ScrollTrigger.create({
-        trigger: item,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => item.classList.add('is-in')
-      });
-    });
-
-    /* ── contact headline word reveal ── */
-    const contactWords = document.querySelectorAll('.contact-headline .word');
-    if (contactWords.length) {
-      gsap.set(contactWords, { yPercent: 110, opacity: 0 });
-      gsap.to(contactWords, {
-        yPercent: 0, opacity: 1,
-        duration: 1.0, stagger: 0.05, ease: 'expo.out',
-        scrollTrigger: { trigger: '.contact-headline', start: 'top 85%', once: true }
-      });
-    }
-
-    /* ── marquees ── */
-    document.querySelectorAll('.marquee-track').forEach(track => {
-      const dir = parseFloat(track.dataset.direction || '1');
-      const tween = gsap.to(track, {
-        xPercent: -50 * dir,
-        duration: 32,
-        ease: 'none',
-        repeat: -1
-      });
-      // counter-direction needs starting offset
-      if (dir < 0) gsap.set(track, { xPercent: -50 });
-
-      const wrap = track.parentElement;
-      wrap.addEventListener('mouseenter', () => tween.timeScale(0.25));
-      wrap.addEventListener('mouseleave', () => tween.timeScale(1));
-    });
-
-    /* ── horizontal pin (desktop only) ── */
-    const hPin = document.querySelector('.h-pin');
-    const hTrack = document.querySelector('.h-pin-track');
-    const hRail = document.querySelector('.h-pin-rail');
-    if (hPin && hTrack && !isMobile) {
-      const getDistance = () => Math.max(0, hTrack.scrollWidth - innerWidth);
-      /* scroll budget: 0.7× the horizontal distance so users escape the pin sooner */
-      const getScrollLength = () => Math.round(getDistance() * 0.7);
-      const tween = gsap.to(hTrack, {
-        x: () => -getDistance(),
-        ease: 'none'
-      });
-      ScrollTrigger.create({
-        trigger: hPin,
-        start: 'top top',
-        end: () => '+=' + getScrollLength(),
-        pin: '.h-pin-stage',
-        scrub: true,            /* instant follow — no 1s ease lag */
-        invalidateOnRefresh: true,
-        animation: tween,
-        onUpdate: (self) => {
-          if (hRail) hRail.style.setProperty('--rail', (self.progress * 100) + '%');
-        }
-      });
-
-      /* keyboard arrows + horizontal trackpad/wheel inside the pinned section */
-      const cardCount = document.querySelectorAll('.project-card').length;
-      const stepBy = (n) => {
-        const step = (window.innerHeight * 0.8) / Math.max(1, cardCount - 1);
-        const target = window.scrollY + step * n;
-        if (window.lenis) window.lenis.scrollTo(target, { duration: 0.6 });
-        else window.scrollTo({ top: target, behavior: 'smooth' });
-      };
-      window.addEventListener('keydown', (e) => {
-        const rect = hPin.getBoundingClientRect();
-        const inView = rect.top <= 1 && rect.bottom > innerHeight;
-        if (!inView) return;
-        if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); stepBy(1); }
-        else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); stepBy(-1); }
-      });
-    }
-
-    /* ── section-aware nav ── */
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
-      const id = link.getAttribute('href');
-      const target = document.querySelector(id);
-      if (!target) return;
-      ScrollTrigger.create({
-        trigger: target,
-        start: 'top 50%',
-        end: 'bottom 50%',
-        onToggle: (self) => {
-          if (self.isActive) {
-            navLinks.forEach(l => l.classList.remove('is-active'));
-            link.classList.add('is-active');
-          }
-        }
-      });
-    });
-
-    /* ── orb mouse parallax ── */
-    const orbs = document.querySelectorAll('.orb');
-    const orbState = { tx: 0, ty: 0, x: 0, y: 0 };
-    addEventListener('mousemove', (e) => {
-      orbState.tx = (e.clientX / innerWidth - 0.5) * 30;
-      orbState.ty = (e.clientY / innerHeight - 0.5) * 30;
-    });
-    function orbTick(){
-      orbState.x += (orbState.tx - orbState.x) * 0.06;
-      orbState.y += (orbState.ty - orbState.y) * 0.06;
-      orbs.forEach((o, i) => {
-        const f = (i + 1) * 0.6;
-        o.style.transform = `translate3d(${orbState.x * f}px, ${orbState.y * f}px, 0)` + (o.classList.contains('orb-3') ? ' translateX(-50%)' : '');
-      });
-      requestAnimationFrame(orbTick);
-    }
-    orbTick();
-
-    /* ── spotlight cursor ── */
-    if (!isTouch) {
-      const ring = document.querySelector('.cursor-ring');
-      const dot = document.querySelector('.cursor-dot');
-      const cur = { x: innerWidth / 2, y: innerHeight / 2, rx: innerWidth / 2, ry: innerHeight / 2 };
-
-      addEventListener('mousemove', (e) => {
-        cur.x = e.clientX;
-        cur.y = e.clientY;
-        dot.style.transform = `translate3d(${cur.x}px, ${cur.y}px, 0) translate(-50%, -50%)`;
-      });
-
-      function cursorTick(){
-        cur.rx += (cur.x - cur.rx) * 0.2;
-        cur.ry += (cur.y - cur.ry) * 0.2;
-        ring.style.transform = `translate3d(${cur.rx}px, ${cur.ry}px, 0) translate(-50%, -50%)`;
-        requestAnimationFrame(cursorTick);
-      }
-      cursorTick();
-      requestAnimationFrame(() => document.body.classList.add('cursor-ready'));
-
-      const linkSel = 'a, button, .skill-tag, .info-row';
-      const viewSel = '.project-card';
-      document.querySelectorAll(viewSel).forEach(el => {
-        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-view'));
-        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-view'));
-      });
-      document.querySelectorAll(linkSel).forEach(el => {
-        if (el.closest('.project-card')) return;
-        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-link'));
-        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-link'));
-      });
-    }
-
-    /* ── magnetic email ── */
-    document.querySelectorAll('[data-magnetic]').forEach(el => {
-      el.addEventListener('mousemove', (e) => {
-        const r = el.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
-        const dy = (e.clientY - (r.top + r.height / 2)) * 0.25;
-        el.style.transform = `translate(${dx}px, ${dy}px)`;
-      });
-      el.addEventListener('mouseleave', () => {
-        el.style.transform = '';
-      });
-    });
-
-    /* ── refresh on font load ── */
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => ScrollTrigger.refresh());
-    }
-    addEventListener('resize', () => ScrollTrigger.refresh());
-  }
-})();
+  });
+});
 </script>
 
 </body>

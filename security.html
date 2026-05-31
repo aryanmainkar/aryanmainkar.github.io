@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security — Aryan Mainkar</title>
+<meta name="description" content="A live security scanner agent — runs passive checks against this site, classifies findings, and writes a recruiter-readable report. Coming in Phase 3.">
+<meta name="theme-color" content="#0a0a0a">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<script>
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-anim');
+  }
+</script>
+
+<link rel="stylesheet" href="assets/css/shared.css">
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="assets/js/shared.js" defer></script>
+<script src="assets/js/chat-widget.js" defer></script>
+
+<style>
+  /* severity colour tokens, scoped to this page */
+  :root {
+    --sev-high:    #ff5d52;
+    --sev-medium:  #ffb547;
+    --sev-low:     #ffe066;
+    --sev-info:    var(--accent-soft);
+  }
+
+  /* ─────────── PAGE HEAD ─────────── */
+  .page-head {
+    padding: 180px 0 80px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .page-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .page-eyebrow .phase-tag {
+    color: var(--bg);
+    background: var(--accent);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+  }
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(56px, 11vw, 168px);
+    line-height: 0.92;
+    font-weight: 300;
+    letter-spacing: -0.035em;
+    margin-bottom: 32px;
+    color: var(--ink);
+  }
+  .page-title em { font-style: italic; color: var(--accent); }
+  .page-lead {
+    max-width: 720px;
+    font-size: 14.5px;
+    line-height: 1.78;
+    color: var(--ink-soft);
+  }
+
+  /* ─────────── MODE CARDS ─────────── */
+  .modes {
+    padding: 80px 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .mode-card {
+    position: relative;
+    padding: 40px 36px;
+    border: 1px dashed var(--rule-strong);
+    background: rgba(255,255,255,0.015);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .mode-card::after {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(57,255,20,0.07), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(95,255,62,0.04), transparent 55%);
+    z-index: -1;
+  }
+  .mode-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mode-status .dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent-glow);
+    animation: pulse 2.4s infinite;
+  }
+  .mode-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  .mode-title em { font-style: italic; color: var(--accent); }
+  .mode-desc {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 460px;
+    margin-bottom: 28px;
+  }
+  .mode-button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 14px 26px;
+    border: 1px dashed var(--rule-strong);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--ink-mute);
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mode-button::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  .mode-button .phase-coming {
+    margin-left: 12px;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+  }
+
+  /* ─────────── CHECKS GRID ─────────── */
+  .checks-section {
+    padding: 60px 0 40px;
+    border-top: 1px solid var(--rule);
+  }
+  .check-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .check-pill {
+    padding: 14px 18px;
+    border: 1px solid var(--rule);
+    background: rgba(255,255,255,0.015);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.4s ease;
+  }
+  .check-pill:hover { border-color: var(--accent); }
+  .check-pill .check-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .check-pill .check-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* ─────────── PREVIEW REPORT ─────────── */
+  .preview-banner {
+    position: relative;
+    margin-top: 80px;
+    padding: 14px 24px;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255,181,71,0.12),
+      rgba(255,181,71,0.12) 12px,
+      transparent 12px,
+      transparent 24px
+    );
+    border: 1px solid rgba(255,181,71,0.4);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sev-medium);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .preview-banner::before {
+    content: '◉';
+    color: var(--sev-medium);
+    font-size: 10px;
+  }
+
+  .report {
+    margin-top: 24px;
+    border: 1px solid var(--rule);
+    background: var(--bg-elev);
+  }
+  .report-header {
+    padding: 36px 40px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .report-target {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .report-target b {
+    color: var(--accent);
+    font-weight: 500;
+    margin-right: 8px;
+  }
+  .report-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-top: 10px;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+  }
+  .report-title em { font-style: italic; color: var(--accent); }
+
+  .severity-strip {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .sev-stat {
+    padding: 10px 18px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    text-align: center;
+    min-width: 88px;
+  }
+  .sev-stat .sev-num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 300;
+    color: var(--ink);
+  }
+  .sev-stat .sev-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 6px;
+  }
+  .sev-stat.is-high   .sev-num { color: var(--sev-high); }
+  .sev-stat.is-medium .sev-num { color: var(--sev-medium); }
+  .sev-stat.is-low    .sev-num { color: var(--sev-low); }
+  .sev-stat.is-info   .sev-num { color: var(--sev-info); }
+
+  .exec-summary {
+    padding: 36px 40px;
+    border-bottom: 1px solid var(--rule);
+    background: linear-gradient(180deg, rgba(57,255,20,0.025), transparent);
+  }
+  .exec-summary-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .exec-summary-label::after {
+    content: '— Generated by L4 model · cached';
+    color: var(--ink-mute);
+    letter-spacing: 0.14em;
+  }
+  .exec-summary p {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(17px, 1.7vw, 22px);
+    line-height: 1.55;
+    font-weight: 300;
+    color: var(--ink);
+    max-width: 880px;
+  }
+  .exec-summary p em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .exec-summary p + p {
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+  }
+
+  .findings {
+    padding: 32px 40px 40px;
+  }
+  .findings-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+  }
+  .finding {
+    padding: 22px 0;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .finding:first-of-type { border-top: none; padding-top: 0; }
+  .finding-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .finding-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 100px;
+    border: 1px solid;
+    width: fit-content;
+  }
+  .finding-pill.is-high   { color: var(--sev-high);   border-color: var(--sev-high); }
+  .finding-pill.is-medium { color: var(--sev-medium); border-color: var(--sev-medium); }
+  .finding-pill.is-low    { color: var(--sev-low);    border-color: var(--sev-low); }
+  .finding-pill.is-info   { color: var(--sev-info);   border-color: var(--sev-info); }
+  .finding-pill::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: currentColor;
+    border-radius: 50%;
+  }
+  .finding-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .finding-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .finding-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .finding-evidence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    padding: 10px 14px;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre;
+    margin-bottom: 12px;
+  }
+  .finding-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .finding-action {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 100px;
+    color: var(--ink-soft);
+    background: transparent;
+    cursor: not-allowed;
+  }
+  .finding-action.is-claude { border-style: dashed; color: var(--ink-mute); }
+
+  /* ─────────── DISCLAIMER ─────────── */
+  .disclaimer {
+    margin-top: 80px;
+    padding: 32px 40px;
+    border: 1px solid var(--rule);
+    background: rgba(255,255,255,0.015);
+    border-left: 3px solid var(--accent);
+  }
+  .disclaimer h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .disclaimer p {
+    font-size: 13px;
+    line-height: 1.78;
+    color: var(--ink-soft);
+    max-width: 760px;
+  }
+  .disclaimer p + p { margin-top: 12px; }
+
+  /* ─────────── CROSSLINK ─────────── */
+  .crosslinks {
+    padding: 80px 0 100px;
+    border-top: 1px solid var(--rule);
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .crosslink {
+    display: block;
+    padding: 32px 28px;
+    border: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.65,0,0.35,1);
+  }
+  .crosslink:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .crosslink-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .crosslink-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .crosslink-title em { font-style: italic; color: var(--accent); }
+
+  @media (max-width: 1100px) {
+    .modes { grid-template-columns: 1fr; }
+    .crosslinks { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .page-head { padding: 130px 0 60px; }
+    .report-header, .exec-summary, .findings { padding-left: 24px; padding-right: 24px; }
+    .finding { grid-template-columns: 1fr; gap: 16px; }
+    .mode-card { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html" aria-label="Aryan Mainkar — home">
+    <span class="dot"></span>Aryan <em>Mainkar</em>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#work">Work</a>
+    <a href="skills.html">Skills</a>
+    <a href="projects.html">Projects</a>
+    <a href="resume.html">Resume</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a class="nav-cta" href="contact.html">Let's talk →</a>
+</nav>
+
+<div class="container">
+
+  <header class="page-head">
+    <div class="page-eyebrow reveal">06 / Security <span class="phase-tag">Phase 3</span></div>
+    <h1 class="page-title reveal" data-drift>Live security audit, <em>in motion</em>.</h1>
+    <p class="page-lead reveal reveal-delay-1">A scanner agent that runs passive checks against this site, classifies findings with a small LLM, and writes a recruiter-readable executive summary with a frontier model. Real for sites I own; pre-rendered demo for everyone else's URL — by design, so this stays on the right side of <em>authorized scanning</em>.</p>
+  </header>
+
+  <!-- ─────────── MODE CARDS ─────────── -->
+  <section class="modes">
+    <article class="mode-card reveal">
+      <div class="mode-status"><span class="dot"></span>Live · authorized · own-site only</div>
+      <h2 class="mode-title">Scan <em>this</em> site.</h2>
+      <p class="mode-desc">Real passive scan against <code class="mono">aryanmainkar.github.io</code>. Transport, headers, cookies, mixed content, exposed files, SRI, email auth — streamed to the report below as each check completes.</p>
+      <button class="mode-button" disabled aria-label="Coming in Phase 3">Run live scan <span class="phase-coming">· Phase 3</span></button>
+    </article>
+
+    <article class="mode-card reveal reveal-delay-1">
+      <div class="mode-status"><span class="dot"></span>Showcase · canned demo · any URL</div>
+      <h2 class="mode-title">Try the <em>demo</em>.</h2>
+      <p class="mode-desc">Paste any URL and see what the scan report would look like for an example domain. No real outbound request — pre-rendered for safety. Lets visitors see capability without the abuse / unauthorized-scanning surface area.</p>
+      <button class="mode-button" disabled aria-label="Coming in Phase 3">Open demo <span class="phase-coming">· Phase 3</span></button>
+    </article>
+  </section>
+
+  <!-- ─────────── CHECKS GRID ─────────── -->
+  <section class="checks-section">
+    <div class="section-label"><span class="num">— A</span> What it checks</div>
+    <div class="check-list">
+      <div class="check-pill"><span class="check-cat">Transport</span><span class="check-name">HTTPS · HSTS · redirect chain</span></div>
+      <div class="check-pill"><span class="check-cat">Headers</span><span class="check-name">CSP · X-Frame · Referrer-Policy</span></div>
+      <div class="check-pill"><span class="check-cat">Headers</span><span class="check-name">Permissions-Policy · X-Content-Type</span></div>
+      <div class="check-pill"><span class="check-cat">Cookies</span><span class="check-name">Secure · HttpOnly · SameSite</span></div>
+      <div class="check-pill"><span class="check-cat">Content</span><span class="check-name">Mixed content over HTTPS</span></div>
+      <div class="check-pill"><span class="check-cat">Disclosure</span><span class="check-name">Server · X-Powered-By headers</span></div>
+      <div class="check-pill"><span class="check-cat">Files</span><span class="check-name">.git · .env · .DS_Store · sitemap</span></div>
+      <div class="check-pill"><span class="check-cat">SRI</span><span class="check-name">External script integrity</span></div>
+      <div class="check-pill"><span class="check-cat">Forms</span><span class="check-name">POST over HTTPS · CSRF posture</span></div>
+      <div class="check-pill"><span class="check-cat">Email</span><span class="check-name">SPF · DMARC · DKIM</span></div>
+    </div>
+  </section>
+
+  <!-- ─────────── PREVIEW REPORT ─────────── -->
+  <div class="preview-banner">Preview · This is a static mockup of the live scanner output — wired up in Phase 3</div>
+
+  <article class="report">
+    <header class="report-header">
+      <div>
+        <div class="report-target"><b>Target</b> aryanmainkar.github.io <span style="color: var(--ink-mute); margin: 0 10px;">·</span> <b>Scanned</b> 2026-05-06 · 22:48 UTC</div>
+        <h3 class="report-title">Static portfolio · <em>safe baseline</em>.</h3>
+      </div>
+      <div class="severity-strip">
+        <div class="sev-stat is-high"><div class="sev-num">0</div><div class="sev-name">High</div></div>
+        <div class="sev-stat is-medium"><div class="sev-num">2</div><div class="sev-name">Medium</div></div>
+        <div class="sev-stat is-low"><div class="sev-num">3</div><div class="sev-name">Low</div></div>
+        <div class="sev-stat is-info"><div class="sev-num">4</div><div class="sev-name">Info</div></div>
+      </div>
+    </header>
+
+    <section class="exec-summary">
+      <div class="exec-summary-label">Executive summary</div>
+      <p>Solid baseline for a static site. <em>No high-severity findings</em>. Two medium issues — a missing Content-Security-Policy and missing Subresource Integrity on third-party scripts — both worth fixing before this is referenced from a higher-traffic surface.</p>
+      <p>The remaining low and info findings are typical of a GitHub Pages deployment: server-software disclosure (GitHub Pages signature), no Permissions-Policy header, and a public sitemap. None of them put visitor data at risk; all of them would be cheap wins on a custom-host migration.</p>
+    </section>
+
+    <section class="findings">
+      <div class="findings-label">Findings · 9 total</div>
+
+      <div class="finding">
+        <div class="finding-meta">
+          <span class="finding-pill is-medium">Medium</span>
+          <span class="finding-cat">Headers / CSP</span>
+        </div>
+        <div>
+          <h4 class="finding-title">No Content-Security-Policy header set</h4>
+          <p class="finding-desc">Without a CSP, the browser allows scripts and stylesheets from any origin. On a static portfolio the blast radius is low, but defining a strict CSP would prevent injected scripts from loading even if the markup were ever tampered with.</p>
+          <div class="finding-evidence">GET / HTTP/2
+↳ no Content-Security-Policy header in response</div>
+          <div class="finding-actions">
+            <button class="finding-action" disabled>Show fix</button>
+            <button class="finding-action is-claude" disabled>Ask Claude how to fix</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-meta">
+          <span class="finding-pill is-medium">Medium</span>
+          <span class="finding-cat">SRI / external scripts</span>
+        </div>
+        <div>
+          <h4 class="finding-title">Third-party scripts loaded without integrity attribute</h4>
+          <p class="finding-desc">GSAP, ScrollTrigger, and Lenis are loaded from <code class="mono">cdn.jsdelivr.net</code> without <code class="mono">integrity</code>/<code class="mono">crossorigin</code>. A compromised CDN could substitute malicious code; SRI hashes prevent that.</p>
+          <div class="finding-evidence">&lt;script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer&gt;&lt;/script&gt;
+↳ no integrity= attribute · 3 scripts affected</div>
+          <div class="finding-actions">
+            <button class="finding-action" disabled>Show fix</button>
+            <button class="finding-action is-claude" disabled>Ask Claude how to fix</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-meta">
+          <span class="finding-pill is-low">Low</span>
+          <span class="finding-cat">Disclosure</span>
+        </div>
+        <div>
+          <h4 class="finding-title">Server header reveals hosting platform</h4>
+          <p class="finding-desc">The response includes <code class="mono">Server: GitHub.com</code>, fingerprinting the hosting platform. Information disclosure on its own isn't dangerous, but it widens the attacker's reconnaissance surface.</p>
+          <div class="finding-evidence">HTTP/2 200 OK
+Server: GitHub.com</div>
+          <div class="finding-actions">
+            <button class="finding-action" disabled>Show fix</button>
+            <button class="finding-action is-claude" disabled>Ask Claude how to fix</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-meta">
+          <span class="finding-pill is-low">Low</span>
+          <span class="finding-cat">Headers / Permissions-Policy</span>
+        </div>
+        <div>
+          <h4 class="finding-title">Permissions-Policy header missing</h4>
+          <p class="finding-desc">No Permissions-Policy means embedded contexts (iframes, third-party scripts) inherit the default-permissive feature set. Setting an explicit policy that disables features you don't use (camera, geolocation, microphone) is good hygiene.</p>
+          <div class="finding-evidence">GET / HTTP/2
+↳ no Permissions-Policy header</div>
+          <div class="finding-actions">
+            <button class="finding-action" disabled>Show fix</button>
+            <button class="finding-action is-claude" disabled>Ask Claude how to fix</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-meta">
+          <span class="finding-pill is-info">Info</span>
+          <span class="finding-cat">Files / public</span>
+        </div>
+        <div>
+          <h4 class="finding-title">No exposed sensitive files detected</h4>
+          <p class="finding-desc">Probed for <code class="mono">.git/config</code>, <code class="mono">.env</code>, <code class="mono">.DS_Store</code>, <code class="mono">/admin</code>, <code class="mono">/wp-admin</code> and similar. All returned 404. Clean.</p>
+          <div class="finding-evidence">HEAD /.git/config → 404
+HEAD /.env       → 404
+HEAD /.DS_Store  → 404</div>
+          <div class="finding-actions">
+            <button class="finding-action" disabled>Show evidence</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </article>
+
+  <!-- ─────────── DISCLAIMER ─────────── -->
+  <aside class="disclaimer">
+    <h3>Scope &amp; authorization</h3>
+    <p>The live scan only ever targets <code class="mono">aryanmainkar.github.io</code> — a site I own, where I have explicit authorization to scan. The "try the demo" mode is a pre-rendered example, not a real scan, so paste-any-URL never triggers an outbound request to a third-party site.</p>
+    <p>That's deliberate. Unauthorized scanning of someone else's infrastructure is legally and ethically off-limits, even with passive checks. If you'd like a real scan of a site you own, get in touch — happy to run it under a written engagement.</p>
+  </aside>
+
+  <!-- ─────────── CROSSLINKS ─────────── -->
+  <section class="crosslinks">
+    <a class="crosslink" href="projects.html#case-uta">
+      <div class="crosslink-label">— Related case study</div>
+      <div class="crosslink-title">UTA Cybersecurity <em>Research</em>.</div>
+    </a>
+    <a class="crosslink" href="contact.html">
+      <div class="crosslink-label">— Engagement</div>
+      <div class="crosslink-title">Want a real scan of <em>your</em> site?</div>
+    </a>
+  </section>
+
+</div>
+
+<div class="container">
+  <footer>
+    <div>© <span data-year>2026</span> Aryan Mainkar</div>
+    <div>Designed &amp; built with care · Arlington, TX</div>
+    <div><span class="gold-dot"></span>v2.1 — Security · preview</div>
+  </footer>
+</div>
+
+</body>
+</html>

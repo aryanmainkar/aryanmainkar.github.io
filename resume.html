@@ -4,261 +4,620 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Resume — Aryan Mainkar</title>
-<meta name="description" content="Aryan Mainkar — UI/UX Developer & Front-End Engineer. Resume with ATS keywords highlighted for recruiters.">
+<meta name="description" content="Aryan Mainkar's resume rendered as layered holographic credentials — UI/UX Developer & Front-End Engineer. Download as PDF or DOCX.">
 <meta name="theme-color" content="#0a0a0a">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<script>
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-anim');
+  }
+</script>
+
+<link rel="stylesheet" href="assets/css/shared.css">
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="assets/js/shared.js" defer></script>
+<script src="assets/js/chat-widget.js" defer></script>
 
 <style>
-  :root {
-    --bg:          #0a0a0a;
-    --bg-elev:     #141414;
-    --bg-elev-2:   #1c1c1c;
-    --ink:         #f5f5f5;
-    --ink-soft:    #a3a3a3;
-    --ink-mute:    #6b6b6b;
-    --accent:      #39FF14;
-    --accent-soft: #9fe8a0;
-    --accent-hot:  #5cff3e;
-    --accent-glow: rgba(57, 255, 20, 0.28);
-    --rule:        rgba(255, 255, 255, 0.10);
-    --rule-strong: rgba(255, 255, 255, 0.22);
+  /* ─────────── animated holographic angle (modern browsers) ─────────── */
+  @property --halo-angle {
+    syntax: '<angle>';
+    initial-value: 130deg;
+    inherits: false;
+  }
+  @keyframes halo-rotate {
+    to { --halo-angle: 490deg; }
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { background: var(--bg); }
-  ::selection { background: var(--accent); color: var(--bg); }
-  body {
+  /* ─────────── PAGE HEAD ─────────── */
+  .page-head {
+    padding: 180px 0 60px;
+  }
+  .page-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .page-eyebrow .ver-tag {
+    color: var(--bg);
+    background: var(--accent);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+  }
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(56px, 11vw, 168px);
+    line-height: 0.92;
+    font-weight: 300;
+    letter-spacing: -0.035em;
+    margin-bottom: 32px;
     color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .page-title em {
+    font-style: italic;
+    color: var(--accent);
+    text-shadow: 0 0 38px rgba(57,255,20,0.32);
+  }
+  .page-lead {
+    max-width: 720px;
     font-size: 14.5px;
-    line-height: 1.65;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  .mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: 'tnum' 1; }
-  a { color: inherit; text-decoration: none; }
-
-  /* nav */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; padding: 22px 48px;
-    display: flex; justify-content: space-between; align-items: center;
-    z-index: 100;
-    background: rgba(10, 10, 10, 0.7);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border-bottom: 1px solid var(--rule);
-  }
-  .nav-logo {
-    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 400;
-    letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
-  }
-  .nav-logo .dot {
-    width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
-    box-shadow: 0 0 12px var(--accent-glow);
-  }
-  .nav-logo em { font-style: italic; color: var(--ink-soft); font-weight: 300; }
-  .nav-links { display: flex; gap: 36px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
-  .nav-links a {
-    color: var(--ink-soft); padding: 6px 0; border-bottom: 1px solid transparent;
-    transition: color 0.3s ease, border-color 0.3s ease;
-  }
-  .nav-links a:hover, .nav-links a.is-active { color: var(--accent); border-color: var(--accent); }
-  .nav-cta {
-    font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 9px 18px;
-    border: 1px solid var(--accent); color: var(--accent); border-radius: 100px;
-    transition: background 0.25s ease, color 0.25s ease;
-  }
-  .nav-cta:hover { background: var(--accent); color: var(--bg); }
-  @media (max-width: 800px) { nav { padding: 16px 24px; } .nav-links { display: none; } }
-
-  /* layout */
-  .container { max-width: 1320px; margin: 0 auto; padding: 0 48px; }
-  @media (max-width: 800px) { .container { padding: 0 24px; } }
-
-  /* hero header */
-  .resume-hero {
-    padding: 140px 0 56px;
-  }
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.2em;
-    color: var(--ink-mute); text-transform: uppercase; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-  .resume-title {
-    font-family: 'Fraunces', serif; font-size: clamp(48px, 8vw, 96px);
-    line-height: 0.95; font-weight: 300; letter-spacing: -0.03em;
-  }
-  .resume-title em { font-style: italic; color: var(--accent); text-shadow: 0 0 30px rgba(57,255,20,0.25); }
-  .resume-sub {
-    margin-top: 20px; font-size: 16px; color: var(--ink-soft); max-width: 680px;
+    line-height: 1.78;
+    color: var(--ink-soft);
   }
 
-  /* toolbar */
-  .toolbar {
-    margin-top: 40px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
-    padding-bottom: 32px; border-bottom: 1px solid var(--rule);
+  /* ─────────── CREDENTIAL STACK ─────────── */
+  .credential-stack {
+    padding: 40px 0 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
   }
-  .btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 11px 22px; border: 1px solid var(--rule-strong);
-    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    border-radius: 100px; cursor: pointer; background: transparent;
-    transition: all 0.25s ease;
+
+  .credential {
+    position: relative;
+    border-radius: 8px;
+    isolation: isolate;
+    will-change: transform;
+    transition: transform 0.5s cubic-bezier(0.65,0,0.35,1);
   }
-  .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn.primary { border-color: var(--accent); color: var(--accent); }
-  .btn.primary:hover { background: var(--accent); color: var(--bg); }
-  .toolbar-meta {
-    margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  .credential:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Holographic border via mask trick + animated conic angle */
+  .credential::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: 9px;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--halo-angle),
+      rgba(57,255,20,0.65)   0%,
+      rgba(95,177,197,0.55) 25%,
+      rgba(197,88,124,0.55) 50%,
+      rgba(95,255,62,0.65)  75%,
+      rgba(57,255,20,0.65) 100%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    animation: halo-rotate 14s linear infinite;
+  }
+
+  .credential-inner {
+    position: relative;
+    background: linear-gradient(180deg, var(--bg-elev), var(--bg-elev-2));
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* Subtle radial glow inside each card */
+  .credential-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 12% 0%, rgba(57,255,20,0.06), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(95,177,197,0.04), transparent 55%);
+  }
+
+  /* Animated shimmer sweep */
+  .credential-inner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      rgba(255,255,255,0.025) 35%,
+      rgba(255,255,255,0.07) 50%,
+      rgba(255,255,255,0.025) 65%,
+      transparent 100%
+    );
+    pointer-events: none;
+    animation: shimmer 9s ease-in-out infinite;
+    animation-delay: var(--shim-delay, 0s);
+  }
+  .credential:hover .credential-inner::after { animation-duration: 3s; }
+  @keyframes shimmer {
+    0%   { left: -60%; }
+    50%  { left: 110%; }
+    100% { left: 110%; }
+  }
+
+  /* ─────────── CREDENTIAL STRIP (header bar) ─────────── */
+  .credential-strip {
+    position: relative;
+    z-index: 1;
+    padding: 16px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
     color: var(--ink-mute);
   }
-  @media (max-width: 700px) { .toolbar-meta { margin-left: 0; width: 100%; } }
-
-  /* split layout */
-  .split {
-    display: grid; grid-template-columns: minmax(0, 1fr) 360px;
-    gap: 64px; padding: 56px 0 120px;
+  .strip-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
   }
-  @media (max-width: 1100px) {
-    .split { grid-template-columns: 1fr; }
-    .ats-panel { position: static !important; max-height: none !important; }
-  }
-
-  /* resume body */
-  .resume-doc {
-    background: var(--bg-elev); border: 1px solid var(--rule);
-    padding: 56px clamp(32px, 5vw, 64px); font-size: 14.5px; line-height: 1.7;
-  }
-  .resume-doc h1 {
-    font-family: 'Fraunces', serif; font-size: 38px; font-weight: 400;
-    letter-spacing: -0.02em; margin-bottom: 8px;
-  }
-  .resume-doc .doc-contact {
-    color: var(--ink-soft); font-size: 13px; margin-bottom: 32px;
-    font-family: 'JetBrains Mono', monospace; word-break: break-word;
-  }
-  .resume-doc .doc-contact a { color: var(--ink-soft); transition: color 0.2s ease; }
-  .resume-doc .doc-contact a:hover { color: var(--accent); }
-  .resume-doc h2 {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
-    margin: 36px 0 18px; padding-bottom: 10px; border-bottom: 1px solid var(--rule);
-  }
-  .resume-doc h3 {
-    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500;
-    margin: 22px 0 4px;
-  }
-  .resume-doc .role-meta {
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-    color: var(--ink-soft); font-size: 13px; margin-bottom: 12px;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .resume-doc .role-meta em { color: var(--accent-soft); font-style: normal; }
-  .resume-doc .tech-line {
-    font-size: 13px; color: var(--ink-mute); margin-bottom: 14px;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .resume-doc ul { list-style: none; margin: 12px 0 8px; }
-  .resume-doc ul li {
-    padding: 6px 0 6px 22px; position: relative; color: var(--ink-soft);
-  }
-  .resume-doc ul li::before {
-    content: '→'; position: absolute; left: 0; color: var(--accent);
-    font-family: 'JetBrains Mono', monospace; font-size: 12px; top: 8px;
-  }
-  .resume-doc p { color: var(--ink-soft); margin-bottom: 12px; }
-
-  /* ATS highlight */
-  mark.ats-hit {
-    background: rgba(57, 255, 20, 0.14);
-    color: var(--accent-hot);
-    padding: 1px 4px; border-radius: 3px;
-    border-bottom: 1px solid rgba(57, 255, 20, 0.4);
+  .strip-id {
+    color: var(--accent);
     font-weight: 500;
   }
-  body.ats-off mark.ats-hit {
-    background: transparent; color: inherit;
-    border-bottom: none; font-weight: inherit; padding: 0;
+  .strip-issuer {
+    color: var(--ink-mute);
+  }
+  .strip-issuer b {
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .strip-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .barcode {
+    width: 96px;
+    height: 18px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--ink-soft) 0px, var(--ink-soft) 1px,
+      transparent 1px, transparent 3px,
+      var(--ink-soft) 3px, var(--ink-soft) 5px,
+      transparent 5px, transparent 7px,
+      var(--accent) 7px, var(--accent) 8px,
+      transparent 8px, transparent 11px,
+      var(--ink-soft) 11px, var(--ink-soft) 13px,
+      transparent 13px, transparent 16px
+    );
+    opacity: 0.55;
+  }
+  .verified-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 11px;
+    border: 1px solid var(--accent);
+    border-radius: 100px;
+    color: var(--accent);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+  }
+  .verified-chip::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(57,255,20,0.7);
+    animation: pulse 2.4s infinite;
   }
 
-  /* ATS panel (right) */
-  .ats-panel {
-    position: sticky; top: 110px;
-    background: var(--bg-elev); border: 1px solid var(--rule);
-    padding: 28px; max-height: calc(100vh - 140px); overflow-y: auto;
-    align-self: start;
+  /* ─────────── CREDENTIAL BODY ─────────── */
+  .credential-body {
+    position: relative;
+    z-index: 1;
+    padding: 40px 40px 44px;
   }
-  .ats-panel-title {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
-    margin-bottom: 8px;
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
   }
-  .ats-panel-sub {
-    font-size: 12px; color: var(--ink-mute); margin-bottom: 24px;
-    line-height: 1.55;
+  .card-num b {
+    color: var(--accent);
+    font-weight: 500;
+    margin-right: 8px;
   }
-  .ats-cat {
-    margin-bottom: 22px; padding-bottom: 22px;
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(30px, 4vw, 52px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .card-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ─────────── IDENTITY CARD ─────────── */
+  .identity-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 36px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--rule);
+  }
+  .identity-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .identity-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .identity-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  .identity-value a {
+    color: var(--ink);
+    text-decoration: none;
     border-bottom: 1px solid var(--rule);
+    padding-bottom: 2px;
+    transition: border 0.3s ease, color 0.3s ease;
   }
-  .ats-cat:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-  .ats-cat-title {
-    font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500;
-    margin-bottom: 12px; color: var(--ink);
+  .identity-value a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
   }
-  .ats-cat-title .ats-count {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    color: var(--ink-mute); margin-left: 8px;
-  }
-  .ats-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .ats-chip {
-    padding: 4px 11px; border: 1px solid var(--rule-strong);
-    border-radius: 100px; font-size: 11.5px;
-    color: var(--ink-soft); transition: all 0.25s ease;
-    cursor: pointer; background: transparent;
+  .identity-status {
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 100px;
     font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
   }
-  .ats-chip:hover, .ats-chip.is-active {
-    background: var(--accent); color: var(--bg); border-color: var(--accent);
+  .identity-status::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--accent-soft);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(57,255,20,0.7);
+    animation: pulse 2.4s infinite;
   }
 
-  /* scrollbar in panel */
-  .ats-panel::-webkit-scrollbar { width: 6px; }
-  .ats-panel::-webkit-scrollbar-track { background: transparent; }
-  .ats-panel::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: 100px; }
+  /* ─────────── SUMMARY CARD ─────────── */
+  .summary-text {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(18px, 1.8vw, 24px);
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 880px;
+  }
+  .summary-text em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .summary-text strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
 
-  /* footer */
-  footer {
-    border-top: 1px solid var(--rule); padding: 32px 48px;
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 18px;
-    color: var(--ink-mute); font-size: 12px;
+  /* ─────────── EXPERIENCE / PROJECT ROWS ─────────── */
+  .role-list, .project-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .role-row, .project-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 32px;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .role-row:first-child, .project-row:first-child {
+    border-top: none;
+    padding-top: 8px;
+  }
+  .role-date, .project-date {
     font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-top: 4px;
   }
-  .gold-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: 8px; box-shadow: 0 0 8px var(--accent-glow); }
-  @media (max-width: 800px) { footer { padding: 24px; flex-direction: column; align-items: flex-start; } }
+  .role-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .role-company {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .role-meta-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+  .role-bullets {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .role-bullets li {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    padding: 5px 0 5px 22px;
+    position: relative;
+  }
+  .role-bullets li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .role-bullets li strong { color: var(--ink); font-weight: 500; }
 
-  /* highlight pulse when scrolling to a chip-clicked term */
-  @keyframes hitPulse {
-    0%, 100% { background: rgba(57, 255, 20, 0.14); }
-    50% { background: rgba(57, 255, 20, 0.5); box-shadow: 0 0 12px rgba(57,255,20,0.5); }
+  .project-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
   }
-  mark.ats-hit.is-pulsing { animation: hitPulse 1.4s ease; }
+  .project-title em { font-style: italic; color: var(--accent); }
+  .project-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2px;
+    transition: border 0.3s, color 0.3s;
+  }
+  .project-link:hover { color: var(--accent); border-color: var(--accent); }
+  .project-stack {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 8px 0 12px;
+  }
+  .project-blurb {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* ─────────── SKILLS CARD ─────────── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 36px;
+    margin-top: 8px;
+  }
+  .skills-cat {
+    border-top: 1px solid var(--rule);
+    padding-top: 18px;
+  }
+  .skills-cat-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .skills-cat-list {
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .skills-cat-list b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ─────────── EDUCATION CARD ─────────── */
+  .edu-row {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    gap: 32px;
+    align-items: baseline;
+    padding-top: 8px;
+  }
+  .edu-school {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .edu-school em { font-style: italic; color: var(--accent); }
+  .edu-degree {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+  .edu-honor {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ─────────── FIXED TOOLBAR ─────────── */
+  .resume-toolbar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    padding: 10px 14px;
+    background: rgba(20, 20, 20, 0.65);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--rule-strong);
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .toolbar-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    border-radius: 100px;
+    text-decoration: none;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toolbar-btn:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--accent);
+  }
+  .toolbar-btn.is-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .toolbar-btn.is-primary:hover {
+    background: var(--accent-hot);
+    color: var(--bg);
+  }
+  .toolbar-divider {
+    width: 1px;
+    height: 22px;
+    background: var(--rule-strong);
+    margin: 0 4px;
+  }
+  .toolbar-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 0 10px;
+  }
+
+  @media (max-width: 900px) {
+    .page-head { padding: 130px 0 40px; }
+    .credential-strip { padding: 12px 20px; gap: 14px; flex-wrap: wrap; }
+    .barcode { width: 64px; }
+    .credential-body { padding: 28px 24px 32px; }
+    .identity-meta { grid-template-columns: 1fr; gap: 16px; }
+    .role-row, .project-row { grid-template-columns: 1fr; gap: 12px; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .edu-row { grid-template-columns: 1fr; }
+    .resume-toolbar { left: 12px; right: 12px; transform: none; justify-content: center; flex-wrap: wrap; }
+    .toolbar-meta { display: none; }
+    .credential-stack { padding-bottom: 140px; }
+  }
+
+  /* Reduced motion: kill the rotating halo + shimmer; keep edge static. */
+  @media (prefers-reduced-motion: reduce) {
+    .credential::before { animation: none; }
+    .credential-inner::after { animation: none; display: none; }
+  }
 </style>
 </head>
 <body>
 
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
 <nav>
-  <a class="nav-logo" href="index.html"><span class="dot"></span>Aryan <em>Mainkar</em></a>
+  <a class="nav-logo" href="index.html" aria-label="Aryan Mainkar — home">
+    <span class="dot"></span>Aryan <em>Mainkar</em>
+  </a>
   <div class="nav-links">
     <a href="index.html#work">Work</a>
-    <a href="index.html#skills">Skills</a>
-    <a href="index.html#projects">Projects</a>
-    <a href="resume.html" class="is-active">Resume</a>
+    <a href="skills.html">Skills</a>
+    <a href="projects.html">Projects</a>
+    <a href="resume.html">Resume</a>
     <a href="contact.html">Contact</a>
   </div>
   <a class="nav-cta" href="contact.html">Let's talk →</a>
@@ -266,287 +625,348 @@
 
 <div class="container">
 
-  <section class="resume-hero">
-    <div class="eyebrow">00 / Resume</div>
-    <h1 class="resume-title">Resume <em>&amp; ATS keywords</em>.</h1>
-    <p class="resume-sub">
-      Recruiters &mdash; the resume below has every relevant ATS keyword highlighted in neon. Use the side panel to filter or jump to specific skills. Download the .docx if your tracker needs it.
-    </p>
-    <div class="toolbar">
-      <a class="btn primary" href="assets/pdf/Aryan_Mainkar_Resume.docx" download>
-        ↓ Download (.docx)
-      </a>
-      <button class="btn" id="toggle-ats">Toggle highlights</button>
-      <button class="btn" id="copy-summary">Copy summary</button>
-      <span class="toolbar-meta">Last updated · 2026</span>
-    </div>
-  </section>
+  <header class="page-head">
+    <div class="page-eyebrow reveal">00 / Resume <span class="ver-tag">v2026.05</span></div>
+    <h1 class="page-title reveal" data-drift>The credentials, <em>signed &amp; sealed</em>.</h1>
+    <p class="page-lead reveal reveal-delay-1">A live, holographic version of my resume — one credential card per section. PDF and DOCX downloads in the toolbar at the bottom of the page if your tracker prefers paper.</p>
+  </header>
 
-  <section class="split">
-    <article class="resume-doc" id="resume-doc">
-      <h1>Aryan Mainkar</h1>
-      <div class="doc-contact">
-        <a href="mailto:aryan.mainkar@mavs.uta.edu">aryan.mainkar@mavs.uta.edu</a>
-        &nbsp;·&nbsp; <a href="tel:+19254362418">+1 (925) 436-2418</a>
-        &nbsp;·&nbsp; <a href="https://github.com/aryanmainkar" target="_blank" rel="noopener">github.com/aryanmainkar</a>
-        &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/aryanmainkar" target="_blank" rel="noopener">linkedin.com/in/aryanmainkar</a>
+  <section class="credential-stack" aria-label="Resume credentials">
+
+    <!-- ─────────── 01 / IDENTITY ─────────── -->
+    <article class="credential reveal" id="cred-identity" style="--shim-delay: 0s;">
+      <div class="credential-inner">
+        <header class="credential-strip">
+          <div class="strip-left">
+            <span class="strip-id">№ 01</span>
+            <span class="strip-issuer"><b>Issuer</b> aryanmainkar.io</span>
+            <span class="strip-issuer"><b>Type</b> Identity</span>
+          </div>
+          <div class="strip-right">
+            <div class="barcode" aria-hidden="true"></div>
+            <span class="verified-chip">Verified</span>
+          </div>
+        </header>
+        <div class="credential-body">
+          <div class="card-num"><b>01</b> Identity</div>
+          <h2 class="card-title">Aryan <em>Mainkar</em>.</h2>
+          <p class="summary-text" style="font-size: 18px;">UI/UX Developer &amp; Front-End Engineer based in Arlington, TX.</p>
+          <div class="identity-status">Available for new opportunities</div>
+          <div class="identity-meta">
+            <div class="identity-row">
+              <span class="identity-label">Email</span>
+              <span class="identity-value"><a href="mailto:aryan.mainkar@mavs.uta.edu">aryan.mainkar@mavs.uta.edu</a></span>
+            </div>
+            <div class="identity-row">
+              <span class="identity-label">Phone</span>
+              <span class="identity-value"><a href="tel:+19254362418">+1 (925) 436-2418</a></span>
+            </div>
+            <div class="identity-row">
+              <span class="identity-label">LinkedIn</span>
+              <span class="identity-value"><a href="https://www.linkedin.com/in/aryanmainkar" target="_blank" rel="noopener">linkedin.com/in/aryanmainkar</a></span>
+            </div>
+            <div class="identity-row">
+              <span class="identity-label">GitHub</span>
+              <span class="identity-value"><a href="https://github.com/aryanmainkar" target="_blank" rel="noopener">github.com/aryanmainkar</a></span>
+            </div>
+            <div class="identity-row">
+              <span class="identity-label">Location</span>
+              <span class="identity-value">Arlington, Texas · UTC −06:00</span>
+            </div>
+            <div class="identity-row">
+              <span class="identity-label">Work setup</span>
+              <span class="identity-value">Remote · Hybrid · On-site</span>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <h2>Professional Summary</h2>
-      <p data-keywords>
-        <strong>Bachelor's in Computer Science</strong> with hands-on experience in Flutter development and Python programming, along with exposure to AI/ML through academic research in cybersecurity. Passionate about building scalable software solutions and eager to continue learning AI technologies while solving real-world business challenges.
-      </p>
-
-      <h2>Skills</h2>
-      <p data-keywords>
-        <strong>Languages and scripts:</strong> PHP, Python (Flask), C, Java (Spring), HTML, CSS, MATLAB, R, Spring Boot, LaTeX, WordPress, Elementor
-      </p>
-      <p data-keywords>
-        <strong>Cloud Technologies:</strong> Microsoft CRM, Azure Kubernetes, Azure DevOps, Azure Monitor, Azure Virtual Machines, ADF
-      </p>
-
-      <h2>Work Experience</h2>
-
-      <h3 id="role-broadaxis">BroadAxis Inc &middot; Full Stack Developer</h3>
-      <div class="role-meta">
-        <span><em>Feb 2026 – Present</em></span>
-        <span>Remote / US</span>
-      </div>
-      <div class="tech-line" data-keywords>Technology: WordPress, Elementor, Adobe Photoshop, CSS, HTML, Python, PHP, Claude Code</div>
-      <ul>
-        <li data-keywords>Joined a fast-moving startup as a core member of a small engineering team, taking ownership of the <strong>full web development lifecycle</strong> across 20+ projects spanning e-commerce, corporate, and portfolio builds using PHP, WordPress, Python, Elementor, CSS and MySQL.</li>
-        <li data-keywords>Integrated <strong>AI-driven image generation workflows</strong> into production using Midjourney and Adobe Firefly, reducing content turnaround time and enabling the team to deliver visually polished sites without external design bottlenecks.</li>
-        <li data-keywords>Developed <strong>custom WordPress plugins</strong> to handle complex data transfer and YMM (Year/Make/Model) mapping across a catalog of <strong>60,000+ products</strong> while ensuring reliable mapping accuracy.</li>
-      </ul>
-
-      <h3 id="role-uta">University of Texas at Arlington &middot; Cybersecurity Research Volunteer</h3>
-      <div class="role-meta">
-        <span><em>March 2025 – Dec 2025</em></span>
-        <span>Arlington, TX</span>
-      </div>
-      <ul>
-        <li data-keywords>Supporting <strong>cybersecurity curriculum development</strong> under Dr. Nadra Guizani by testing course materials and creating tutorial-based content for student organizations.</li>
-        <li data-keywords>Conducting literature reviews and analyzing Google Scholar-based <strong>AI/ML implementations</strong> to publish a cybersecurity research paper; supporting academic writing, resource curation, and submission planning.</li>
-      </ul>
-
-      <h3 id="role-kshan">Kshan Tech Soft Pvt LTD &middot; Flutter Developer Intern</h3>
-      <div class="role-meta">
-        <span><em>May 2024 – August 2024</em></span>
-        <span>Pune, India</span>
-      </div>
-      <div class="tech-line" data-keywords>Technology: Flutter, Dart, HTML, CSS</div>
-      <ul>
-        <li data-keywords>Developed responsive web pages using <strong>Flutter and Dart</strong> per client requirements. Added features like custom icons, login pages, and padding scrolling functionality to enhance user experience.</li>
-        <li data-keywords>Provided <strong>cross-platform support</strong> by testing webpages across Android, Windows and Linux.</li>
-      </ul>
-
-      <h3 id="role-viridium">Viridium AI &middot; Software Developer Intern</h3>
-      <div class="role-meta">
-        <span><em>May 2023 – August 2023</em></span>
-        <span>Seattle, WA</span>
-      </div>
-      <div class="tech-line" data-keywords>Technology: MySQL, Spring Boot, Azure DevOps, Git</div>
-      <ul>
-        <li data-keywords>Implemented <strong>Azure data ingestion pipelines</strong> for efficient data processing using Azure Data Factory.</li>
-        <li data-keywords>Applied simple <strong>ML techniques</strong>, including random forest and linear regression, for environmental sustainability insights.</li>
-        <li data-keywords>Developed a <strong>logging &amp; monitoring framework</strong> for site incidents using Spring Boot (SLF4J, LOG4J).</li>
-      </ul>
-
-      <h2>Projects</h2>
-
-      <h3>LSB Steganography Application</h3>
-      <div class="role-meta">
-        <span><em>Jan 2024 – May 2024</em></span>
-        <span><a href="https://github.com/aryanmainkar/Steganography-Website" target="_blank" rel="noopener">github.com/aryanmainkar/Steganography-Website</a></span>
-      </div>
-      <div class="tech-line" data-keywords>Stack: Flask, Python, GCP, Firestore</div>
-      <ul>
-        <li data-keywords>Built a full-stack web app allowing users to hide and retrieve messages in images.</li>
-      </ul>
-
-      <h3>Keypoint Detection using HOG and SIFT</h3>
-      <div class="role-meta">
-        <span><em>Jan 2024 – May 2024</em></span>
-        <span><a href="https://github.com/aryanmainkar/Matching-and-Image-stitching-with-SIFT-and-RANSAC." target="_blank" rel="noopener">github.com/aryanmainkar/Matching-and-Image-stitching</a></span>
-      </div>
-      <div class="tech-line" data-keywords>Stack: Python, Jupyter Notebook, OpenCV, NumPy</div>
-      <ul>
-        <li data-keywords>Used SIFT and RANSAC for <strong>feature matching</strong> on CIFAR-10 dataset images.</li>
-      </ul>
-
-      <h3>Customer Spending Prediction Model</h3>
-      <div class="role-meta">
-        <span><em>Aug 2023 – Dec 2023</em></span>
-        <span><a href="https://github.com/aryanmainkar/Customer-Sales-Data-Analysis" target="_blank" rel="noopener">github.com/aryanmainkar/Customer-Sales-Data-Analysis</a></span>
-      </div>
-      <div class="tech-line" data-keywords>Stack: Python, scikit-learn, pandas</div>
-      <ul>
-        <li data-keywords>Built a <strong>machine learning model</strong> using random forest regression to predict customer spending based on age, gender, and payment methods. Implemented in Python with scikit-learn and advanced data visualization.</li>
-      </ul>
-
-      <h2>Education</h2>
-      <h3>University of Texas at Arlington</h3>
-      <div class="role-meta">
-        <span><em>Bachelor of Science in Computer Science</em></span>
-        <span>Aug 2020 – Dec 2024</span>
-      </div>
-      <p data-keywords><strong>Maverick Academic Scholar.</strong> Coursework: Software Engineering, Algorithms &amp; Data Structures, Computer Vision, Machine Learning, Database Systems, Cybersecurity.</p>
     </article>
 
-    <aside class="ats-panel" aria-label="ATS keywords">
-      <div class="ats-panel-title">ATS Keywords</div>
-      <p class="ats-panel-sub">Click any keyword to find &amp; pulse it in the resume. Each chip = a hit on this page.</p>
+    <!-- ─────────── 02 / SUMMARY ─────────── -->
+    <article class="credential reveal" id="cred-summary" style="--shim-delay: 1.1s;">
+      <div class="credential-inner">
+        <header class="credential-strip">
+          <div class="strip-left">
+            <span class="strip-id">№ 02</span>
+            <span class="strip-issuer"><b>Issuer</b> aryanmainkar.io</span>
+            <span class="strip-issuer"><b>Type</b> Summary</span>
+          </div>
+          <div class="strip-right">
+            <div class="barcode" aria-hidden="true"></div>
+            <span class="verified-chip">Verified</span>
+          </div>
+        </header>
+        <div class="credential-body">
+          <div class="card-num"><b>02</b> Professional summary</div>
+          <h2 class="card-title">Bridging <em>design</em> &amp; <em>code</em>.</h2>
+          <p class="summary-text"><strong>B.S. Computer Science</strong> with hands-on production work in full-stack development, Flutter, and Python — and exposure to AI/ML through cybersecurity research at UTA. Currently a Full Stack Developer at <strong>BroadAxis Inc</strong>, integrating <em>AI-driven creative workflows</em> into a 60K+ product catalog. Building this site as the next chapter — agent-augmented portfolio with a live security scanner.</p>
+        </div>
+      </div>
+    </article>
 
-      <div class="ats-cat">
-        <div class="ats-cat-title">Languages <span class="ats-count" id="count-languages"></span></div>
-        <div class="ats-chips" data-cat="languages"></div>
+    <!-- ─────────── 03 / EXPERIENCE ─────────── -->
+    <article class="credential reveal" id="cred-experience" style="--shim-delay: 2.2s;">
+      <div class="credential-inner">
+        <header class="credential-strip">
+          <div class="strip-left">
+            <span class="strip-id">№ 03</span>
+            <span class="strip-issuer"><b>Issuer</b> aryanmainkar.io</span>
+            <span class="strip-issuer"><b>Type</b> Work history · 4 entries</span>
+          </div>
+          <div class="strip-right">
+            <div class="barcode" aria-hidden="true"></div>
+            <span class="verified-chip">Verified</span>
+          </div>
+        </header>
+        <div class="credential-body">
+          <div class="card-num"><b>03</b> Experience</div>
+          <h2 class="card-title">Selected <em>work</em>.</h2>
+
+          <div class="role-list">
+
+            <div class="role-row">
+              <div class="role-date">Feb 2026<br>— Present</div>
+              <div>
+                <h3 class="role-title">Full Stack Developer</h3>
+                <div class="role-company">BroadAxis Inc · Remote / US</div>
+                <div class="role-meta-line">Stack · WordPress · Elementor · PHP · MySQL · Bootstrap · Adobe CS · Midjourney · Firefly · Claude Code</div>
+                <ul class="role-bullets">
+                  <li>Owned the <strong>full UI/UX and front-end lifecycle</strong> across 20+ projects (e-commerce, corporate, portfolio) — Figma mockups through pixel-perfect, responsive, cross-browser implementations.</li>
+                  <li>Integrated <strong>AI-driven image generation</strong> (Midjourney, Adobe Firefly, Google Flow) into production, cutting content turnaround and removing external design bottlenecks.</li>
+                  <li>Developed <strong>custom WordPress plugins</strong> and a reusable component library to standardize UI and handle YMM (Year/Make/Model) mapping across a <strong>60,000+ product catalog</strong>.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="role-row">
+              <div class="role-date">Mar 2025<br>— Dec 2025</div>
+              <div>
+                <h3 class="role-title">Cybersecurity Research Volunteer</h3>
+                <div class="role-company">University of Texas at Arlington</div>
+                <div class="role-meta-line">Advisor · Dr. Nadra Guizani</div>
+                <ul class="role-bullets">
+                  <li>Supported <strong>cybersecurity curriculum development</strong> by testing course materials and authoring tutorial-based content for student organizations.</li>
+                  <li>Conducted <strong>literature reviews</strong> on Google Scholar–indexed AI/ML implementations and contributed to academic writing, resource curation, and submission planning for a published research paper.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="role-row">
+              <div class="role-date">May 2024<br>— Aug 2024</div>
+              <div>
+                <h3 class="role-title">Flutter Developer Intern</h3>
+                <div class="role-company">Kshan Tech Soft Pvt Ltd · Pune, India</div>
+                <div class="role-meta-line">Stack · Flutter · Dart · Figma · HTML · CSS</div>
+                <ul class="role-bullets">
+                  <li>Built <strong>responsive web pages</strong> in Flutter and Dart per client mockups — custom icons, login flows, scroll-based navigation.</li>
+                  <li>Provided <strong>cross-platform support</strong> by testing across Android, Windows, and Linux to ensure consistent UI behavior.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="role-row">
+              <div class="role-date">May 2023<br>— Aug 2023</div>
+              <div>
+                <h3 class="role-title">Software Developer Intern</h3>
+                <div class="role-company">Viridium AI · Seattle, WA</div>
+                <div class="role-meta-line">Stack · Spring Boot · MySQL · Azure DevOps · Azure Data Factory · scikit-learn</div>
+                <ul class="role-bullets">
+                  <li>Implemented <strong>Azure data ingestion pipelines</strong> using Azure Data Factory.</li>
+                  <li>Applied <strong>ML techniques</strong> (random forest, linear regression) for environmental sustainability insights.</li>
+                  <li>Built a <strong>logging &amp; monitoring framework</strong> for site incidents using Spring Boot (SLF4J, LOG4J).</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
-      <div class="ats-cat">
-        <div class="ats-cat-title">Frameworks &amp; libraries <span class="ats-count" id="count-frameworks"></span></div>
-        <div class="ats-chips" data-cat="frameworks"></div>
+    </article>
+
+    <!-- ─────────── 04 / SKILLS ─────────── -->
+    <article class="credential reveal" id="cred-skills" style="--shim-delay: 3.3s;">
+      <div class="credential-inner">
+        <header class="credential-strip">
+          <div class="strip-left">
+            <span class="strip-id">№ 04</span>
+            <span class="strip-issuer"><b>Issuer</b> aryanmainkar.io</span>
+            <span class="strip-issuer"><b>Type</b> Capabilities</span>
+          </div>
+          <div class="strip-right">
+            <div class="barcode" aria-hidden="true"></div>
+            <span class="verified-chip">Verified</span>
+          </div>
+        </header>
+        <div class="credential-body">
+          <div class="card-num"><b>04</b> Skills</div>
+          <h2 class="card-title">The <em>toolkit</em>.</h2>
+
+          <div class="skills-grid">
+            <div class="skills-cat">
+              <div class="skills-cat-title">Languages</div>
+              <div class="skills-cat-list"><b>PHP</b>, <b>Python</b> (Flask), <b>Java</b> (Spring), C, HTML, CSS, MATLAB, R, LaTeX</div>
+            </div>
+            <div class="skills-cat">
+              <div class="skills-cat-title">Frontend &amp; Design</div>
+              <div class="skills-cat-list"><b>Figma</b>, Adobe Photoshop, Adobe Illustrator, <b>WordPress</b>, Elementor, Bootstrap, <b>Flutter</b>, Dart, Responsive · Cross-browser</div>
+            </div>
+            <div class="skills-cat">
+              <div class="skills-cat-title">Backend &amp; Cloud</div>
+              <div class="skills-cat-list"><b>Spring Boot</b>, <b>MySQL</b>, <b>Azure</b> (DevOps · Kubernetes · Monitor · VMs · Data Factory), GCP, Firestore, Microsoft CRM, Postman, Git</div>
+            </div>
+            <div class="skills-cat">
+              <div class="skills-cat-title">AI &amp; ML</div>
+              <div class="skills-cat-list"><b>Claude Code</b>, scikit-learn, OpenCV / SIFT, <b>Midjourney</b>, <b>Adobe Firefly</b>, Google Flow</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="ats-cat">
-        <div class="ats-cat-title">Cloud &amp; tools <span class="ats-count" id="count-cloud"></span></div>
-        <div class="ats-chips" data-cat="cloud"></div>
+    </article>
+
+    <!-- ─────────── 05 / PROJECTS ─────────── -->
+    <article class="credential reveal" id="cred-projects" style="--shim-delay: 4.4s;">
+      <div class="credential-inner">
+        <header class="credential-strip">
+          <div class="strip-left">
+            <span class="strip-id">№ 05</span>
+            <span class="strip-issuer"><b>Issuer</b> aryanmainkar.io</span>
+            <span class="strip-issuer"><b>Type</b> Notable projects · 3 entries</span>
+          </div>
+          <div class="strip-right">
+            <div class="barcode" aria-hidden="true"></div>
+            <span class="verified-chip">Verified</span>
+          </div>
+        </header>
+        <div class="credential-body">
+          <div class="card-num"><b>05</b> Projects</div>
+          <h2 class="card-title">Personal <em>builds</em>.</h2>
+
+          <div class="project-list">
+
+            <div class="project-row">
+              <div class="project-date">Jan — May<br>2024</div>
+              <div>
+                <h3 class="project-title">LSB Steganography <em>Application</em></h3>
+                <a class="project-link" href="https://github.com/aryanmainkar/Steganography-Website" target="_blank" rel="noopener">github.com/aryanmainkar/Steganography-Website ↗</a>
+                <div class="project-stack">Stack · Flask · Python · GCP · Firestore</div>
+                <p class="project-blurb">Full-stack web app for hiding and retrieving messages inside images using least-significant-bit encoding. Hand-built upload/preview UI, encoding pipeline end-to-end, persistence on Firestore.</p>
+              </div>
+            </div>
+
+            <div class="project-row">
+              <div class="project-date">Jan — May<br>2024</div>
+              <div>
+                <h3 class="project-title">Keypoint Detection · <em>HOG &amp; SIFT</em></h3>
+                <a class="project-link" href="https://github.com/aryanmainkar/Matching-and-Image-stitching-with-SIFT-and-RANSAC." target="_blank" rel="noopener">github.com/aryanmainkar/Matching-and-Image-stitching ↗</a>
+                <div class="project-stack">Stack · Python · Jupyter · OpenCV · NumPy</div>
+                <p class="project-blurb">Computer vision project using SIFT and RANSAC for feature matching across the CIFAR-10 dataset — exploring the trade-off between descriptor robustness and computational cost.</p>
+              </div>
+            </div>
+
+            <div class="project-row">
+              <div class="project-date">Aug — Dec<br>2023</div>
+              <div>
+                <h3 class="project-title">Customer Spending <em>Prediction</em></h3>
+                <a class="project-link" href="https://github.com/aryanmainkar/Customer-Sales-Data-Analysis" target="_blank" rel="noopener">github.com/aryanmainkar/Customer-Sales-Data-Analysis ↗</a>
+                <div class="project-stack">Stack · Python · scikit-learn · pandas</div>
+                <p class="project-blurb">Random forest regression model predicting customer spending from age, gender, and payment-method features. Focused on feature engineering, model interpretability, and clean visualizations.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
-      <div class="ats-cat">
-        <div class="ats-cat-title">Domain <span class="ats-count" id="count-domain"></span></div>
-        <div class="ats-chips" data-cat="domain"></div>
+    </article>
+
+    <!-- ─────────── 06 / EDUCATION ─────────── -->
+    <article class="credential reveal" id="cred-education" style="--shim-delay: 5.5s;">
+      <div class="credential-inner">
+        <header class="credential-strip">
+          <div class="strip-left">
+            <span class="strip-id">№ 06</span>
+            <span class="strip-issuer"><b>Issuer</b> aryanmainkar.io</span>
+            <span class="strip-issuer"><b>Type</b> Academic</span>
+          </div>
+          <div class="strip-right">
+            <div class="barcode" aria-hidden="true"></div>
+            <span class="verified-chip">Verified</span>
+          </div>
+        </header>
+        <div class="credential-body">
+          <div class="card-num"><b>06</b> Education</div>
+          <h2 class="card-title">Foundation.</h2>
+
+          <div class="edu-row">
+            <div class="role-date">Aug 2020<br>— Dec 2024</div>
+            <div>
+              <h3 class="edu-school">University of Texas at <em>Arlington</em></h3>
+              <div class="edu-degree">Bachelor of Science in Computer Science · Arlington, TX<br>Coursework: Software Engineering, Algorithms &amp; Data Structures, Computer Vision, Machine Learning, Database Systems, Cybersecurity.</div>
+            </div>
+            <div class="edu-honor">Maverick Academic Scholar</div>
+          </div>
+        </div>
       </div>
-      <div class="ats-cat">
-        <div class="ats-cat-title">Soft skills <span class="ats-count" id="count-soft"></span></div>
-        <div class="ats-chips" data-cat="soft"></div>
-      </div>
-    </aside>
+    </article>
+
   </section>
 </div>
 
-<footer>
-  <div>© 2026 Aryan Mainkar</div>
-  <div>Designed &amp; built with care · Arlington, TX</div>
-  <div><span class="gold-dot"></span>v2.1 — Resume</div>
-</footer>
+<!-- ─────────── FIXED TOOLBAR ─────────── -->
+<aside class="resume-toolbar" role="toolbar" aria-label="Resume actions">
+  <a class="toolbar-btn is-primary" href="Aryan%20Mainkar%202026%20Resume%20(2).pdf" download="Aryan_Mainkar_Resume.pdf" aria-label="Download PDF">↓ PDF</a>
+  <a class="toolbar-btn" href="assets/pdf/Aryan_Mainkar_Resume.docx" download aria-label="Download DOCX">↓ DOCX</a>
+  <span class="toolbar-divider" aria-hidden="true"></span>
+  <button class="toolbar-btn" id="printResume" aria-label="Print this page">⎙ Print</button>
+  <span class="toolbar-divider" aria-hidden="true"></span>
+  <span class="toolbar-meta">v2026.05 · 6 cards</span>
+</aside>
+
+<div class="container">
+  <footer>
+    <div>© <span data-year>2026</span> Aryan Mainkar</div>
+    <div>Designed &amp; built with care · Arlington, TX</div>
+    <div><span class="gold-dot"></span>v2.1 — Resume · holographic</div>
+  </footer>
+</div>
 
 <script>
-(function(){
-  /* curated ATS keywords by category. Each token here is highlighted in the resume body. */
-  const CATEGORIES = {
-    languages: ['Python','PHP','Java','HTML','CSS','C','MATLAB','R','Dart','LaTeX'],
-    frameworks: ['Flask','Spring Boot','Spring','WordPress','Elementor','Flutter','scikit-learn','pandas','NumPy','OpenCV','Bootstrap','SLF4J','LOG4J','Jupyter Notebook'],
-    cloud: ['Azure','Azure DevOps','Azure Kubernetes','Azure Data Factory','Azure Monitor','Azure Virtual Machines','ADF','GCP','Firestore','MySQL','Microsoft CRM','Git','Adobe Photoshop','Adobe Firefly','Midjourney','Claude Code'],
-    domain: ['UI/UX','full-stack','full web development lifecycle','machine learning','random forest','linear regression','feature matching','SIFT','RANSAC','HOG','CIFAR-10','data ingestion','logging','monitoring','cybersecurity','AI/ML','custom WordPress plugins','60,000+ products','Computer Science','Maverick Academic Scholar'],
-    soft: ['cross-platform support','responsive web pages','curriculum development','literature reviews','academic writing']
-  };
-
-  /* Highlight occurrences inside [data-keywords] regions using a regex per term.
-     Whole-word match where possible, case-insensitive, longest-first to avoid partial-shadowing. */
-  function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-
-  const ALL_TERMS = [];
-  for (const [cat, list] of Object.entries(CATEGORIES)) {
-    list.forEach(t => ALL_TERMS.push({ term: t, cat }));
-  }
-  /* sort by length desc so "Spring Boot" matches before "Spring" */
-  ALL_TERMS.sort((a, b) => b.term.length - a.term.length);
-
-  const counts = { languages: 0, frameworks: 0, cloud: 0, domain: 0, soft: 0 };
-
-  document.querySelectorAll('[data-keywords]').forEach(scope => {
-    const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, null);
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-
-    nodes.forEach(node => {
-      const text = node.nodeValue;
-      const ranges = [];
-      ALL_TERMS.forEach(({ term, cat }) => {
-        const wb = /^[A-Za-z0-9]/.test(term[0]) && /[A-Za-z0-9]$/.test(term[term.length-1]) ? "\b" : "";
-        const re = new RegExp(`${wb}${escapeReg(term)}${wb}`, "gi");
-        let m;
-        while ((m = re.exec(text)) !== null) {
-          ranges.push({ start: m.index, end: m.index + m[0].length, cat, text: m[0] });
-          if (m.index === re.lastIndex) re.lastIndex++;
-        }
-      });
-      if (!ranges.length) return;
-      ranges.sort((a, b) => a.start - b.start || (b.end - b.start) - (a.end - a.start));
-      const accepted = [];
-      let lastEnd = -1;
-      ranges.forEach(r => { if (r.start >= lastEnd) { accepted.push(r); lastEnd = r.end; } });
-      const frag = document.createDocumentFragment();
-      let cursor = 0;
-      accepted.forEach(r => {
-        if (r.start > cursor) frag.appendChild(document.createTextNode(text.slice(cursor, r.start)));
-        const mark = document.createElement("mark");
-        mark.className = "ats-hit";
-        mark.dataset.cat = r.cat;
-        mark.textContent = r.text;
-        frag.appendChild(mark);
-        counts[r.cat] = (counts[r.cat] || 0) + 1;
-        cursor = r.end;
-      });
-      if (cursor < text.length) frag.appendChild(document.createTextNode(text.slice(cursor)));
-      node.parentNode.replaceChild(frag, node);
+/* resume.html — parallax shift + print handler. Runs after portfolio:ready. */
+document.addEventListener('portfolio:ready', () => {
+  /* Stagger card entrance — overrides shared `.reveal` defaults to feel like cards
+     getting slid out of a wallet rather than fading in from below. */
+  gsap.set('.credential', { y: 64, opacity: 0 });
+  gsap.utils.toArray('.credential').forEach((card, i) => {
+    gsap.to(card, {
+      y: 0, opacity: 1,
+      duration: 1.1,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 88%',
+        once: true,
+      },
     });
   });
 
-  /* render chips with hit counts */
-  for (const [cat, list] of Object.entries(CATEGORIES)) {
-    const wrap = document.querySelector(`.ats-chips[data-cat="${cat}"]`);
-    if (!wrap) continue;
-    list.forEach(term => {
-      const hits = document.querySelectorAll(`mark.ats-hit[data-cat="${cat}"]`);
-      const matched = Array.from(hits).filter(h => h.textContent.toLowerCase() === term.toLowerCase()).length;
-      const chip = document.createElement('button');
-      chip.className = 'ats-chip';
-      chip.textContent = matched > 0 ? `${term} · ${matched}` : term;
-      chip.dataset.term = term;
-      chip.dataset.cat = cat;
-      if (matched === 0) { chip.style.opacity = '0.4'; chip.title = 'No exact match in resume'; }
-      chip.addEventListener('click', () => jumpToTerm(term, cat));
-      wrap.appendChild(chip);
+  /* Subtle parallax — each card drifts up a hair as it scrolls through viewport. */
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    gsap.utils.toArray('.credential').forEach((card) => {
+      gsap.to(card, {
+        yPercent: -3,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: card,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 0.8,
+        },
+      });
     });
-    const counter = document.getElementById(`count-${cat}`);
-    if (counter) counter.textContent = `(${counts[cat] || 0})`;
   }
+});
 
-  function jumpToTerm(term, cat) {
-    const hits = Array.from(document.querySelectorAll(`mark.ats-hit[data-cat="${cat}"]`))
-      .filter(h => h.textContent.toLowerCase() === term.toLowerCase());
-    if (!hits.length) return;
-    /* cycle to the next hit each click */
-    const idx = (window.__atsHitIdx = ((window.__atsHitIdx ?? -1) + 1) % hits.length);
-    const target = hits[idx];
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    document.querySelectorAll('mark.ats-hit.is-pulsing').forEach(m => m.classList.remove('is-pulsing'));
-    target.classList.add('is-pulsing');
-    setTimeout(() => target.classList.remove('is-pulsing'), 1500);
-  }
-
-  /* toggle highlights */
-  document.getElementById('toggle-ats').addEventListener('click', () => {
-    document.body.classList.toggle('ats-off');
-  });
-
-  /* copy summary */
-  document.getElementById('copy-summary').addEventListener('click', async (e) => {
-    const summary = `Aryan Mainkar — UI/UX Developer & Front-End Engineer
-Currently: Full Stack Developer at BroadAxis Inc
-Education: B.S. Computer Science, UT Arlington (Maverick Academic Scholar)
-Email: aryan.mainkar@mavs.uta.edu | Phone: +1 (925) 436-2418
-GitHub: github.com/aryanmainkar | LinkedIn: linkedin.com/in/aryanmainkar
-Stack: Python, PHP, Java, Flask, Spring Boot, WordPress, Flutter, Azure, GCP, MySQL, Git`;
-    try {
-      await navigator.clipboard.writeText(summary);
-      const orig = e.target.textContent;
-      e.target.textContent = 'Copied ✓';
-      setTimeout(() => { e.target.textContent = orig; }, 1600);
-    } catch(err) { console.warn(err); }
-  });
-})();
+document.getElementById('printResume')?.addEventListener('click', () => window.print());
 </script>
-
-<script src="assets/js/chat-widget.js" defer></script>
 
 </body>
 </html>
